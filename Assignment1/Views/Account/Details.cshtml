@@ -1,0 +1,133 @@
+﻿@model Donation.IdentityModels.AppIdentityUser
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div class="card-header">
+    <div class="d-flex justify-content-between">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                data-bs-target="#exampleModal@(Model.Id)">
+            Sửa
+        </button>
+    </div>
+
+    <!-- Modal Update-->
+    <div class="modal fade" id="exampleModal@(Model.Id)" tabindex="-1"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabell">Cập nhật</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @using (Html.BeginForm("update", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <input type="hidden" name="id">
+                        <div class="row">
+                            <input class="form-control" type="text" hidden name="redirectTo" value="details" />
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="addname"
+                                       class="col-form-label">Tên:</label>
+                                @*<input type="text" class="form-control"
+                                    id="addname" name="fullName" required value="@Model.FullName">*@
+                                <input type="text" class="form-control" name="firstName" value="@Model.FirstName" />
+                                <label for="addname" class="col-form-label">Họ</label>
+                                <input type="text" class="form-control" name="lastName" value="@Model.LastName" />
+                            </div>
+                            <div class="col-6">
+                                <label for="addcost"
+                                       class="col-form-label">Email:</label>
+                                <input type="email" class="form-control"
+                                       id="addcost" name="email" required value="@(Model.Email)" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="addname"
+                                       class="col-form-label">Số điện thoại:</label>
+                                <input type="text" class="form-control"
+                                       id="addname" name="phoneNumber" required
+                                       value="@(Model.PhoneNumber)">
+                            </div>
+                            <div class="col-6">
+                                <label for="addcost"
+                                       class="col-form-label">Địa chỉ:</label>
+                                <input type="text" class="form-control"
+                                       id="addcost" name="address" required
+                                       value="@(Model.Address)">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="addname"
+                                       class="col-form-label">Tài khoản:</label>
+                                <input readonly type="text" class="form-control"
+                                       id="addname" name="userName" required value="@(Model.UserName)">
+                                <input readonly type="hidden" class="form-control"
+                                       id="addname" name="idUser" required value="@(Model.Id)">
+                                @*<input readonly type="hidden" class="form-control"
+                                    id="addname" name="password" required>*@
+                                @*<input readonly type="hidden" class="form-control"
+                                    id="addname" name="status" required value="@(user.Notes)">*@
+                            </div>
+                            <div class="col-6">
+                                <label for="ct_id" class="col-form-label">Vai trò:</label>
+                                <select class="form-control" id="ct_id" name="idRole" required>
+                                    @foreach (var item in (SelectList)ViewBag.Roles)
+                                    {
+                                        <option value="@item.Value" @(ViewBag.UserRole as string == item.Text ? "selected" : "hidden")>
+                                            @item.Text
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary">Lưu </button>
+                        </div>
+
+                        @Html.ValidationSummary()
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Modal Update-->
+</div>
+
+<table class="table-bordered">
+    <tr>
+        <th>Họ và tên</th>
+        <td>@Model.FullName</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>@Model.Email</td>
+    </tr>
+    <tr>
+        <th>Số điện thoại</th>
+        <td>@Model.PhoneNumber</td>
+    </tr>
+    <tr>
+        <td>Địa chỉ</td>
+        <td>@Model.Address</td>
+    </tr>
+    <tr>
+        <td>Tài khoản</td>
+        <td>@Model.UserName</td>
+    </tr>
+    <tr>
+        <th>Vai trò</th>
+        <td>
+            @(ViewBag.UserRole as string)
+        </td>
+    </tr>
+</table>

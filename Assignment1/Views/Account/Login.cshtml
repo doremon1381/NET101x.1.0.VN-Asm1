@@ -1,0 +1,69 @@
+﻿@model Assignment1.ViewModel.AccountLoginVM
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Login - SB Admin</title>
+
+    @*Use to define DOM manipulation internally *@
+    <script src="~/Scripts/jquery-3.7.1.js"></script>
+    @*This one define the rules of validation*@
+    <script src="~/Scripts/jquery.validate.js"></script>
+    @*This one for dynamically show error message*@
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+    <link rel="stylesheet" href="~/Content/static/admin1/assets/css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-primary">
+
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5">
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header"><h3 class="text-center font-weight-light my-4">Đăng nhập</h3></div>
+                                <div class="card-body">
+                                    @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+                                    {
+                                        <div class="form-floating mb-3">
+                                            @Html.TextBoxFor(t => t.UserName, new { @class = "form-control", id = "inputEmail", name = "email", type = "text", placeholder = "name@example.com" })
+                                            @Html.LabelFor(t => t.UserName)
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            @Html.TextBoxFor(t => t.Password, new { @class = "form-control", id = "inputPassword", name = "password", type = "password", placeholder = "Password" })
+                                            @Html.LabelFor(t => t.Password)
+                                        </div>
+                                        @Html.ValidationSummary()
+                                        if (ViewBag.Error != null)
+                                        {
+                                            <p class="text-danger">@ViewBag.Error</p>
+                                        }
+
+                                        <div class="d-flex align-items-center justify-content-end mt-4 mb-0">
+                                            <button class="btn btn-primary" type="submit">Login</button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+    </div>
+    @*<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="~/Content/static/admin1/assets/js/scripts.js"></script>*@
+</body>
+</html>

@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.TypeScript.MSBuild.5.8.3\build\Microsoft.TypeScript.MSBuild.props" Condition="Exists('..\packages\Microsoft.TypeScript.MSBuild.5.8.3\build\Microsoft.TypeScript.MSBuild.props')" />
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -46,11 +47,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+      <HintPath>..\packages\BouncyCastle.Cryptography.2.5.1\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="MailKit, Version=4.13.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
+      <HintPath>..\packages\MailKit.4.13.0\lib\net47\MailKit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -58,10 +65,57 @@
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.4\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.4\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.2.2\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.2.2\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="MimeKit, Version=4.13.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
+      <HintPath>..\packages\MimeKit.4.13.0\lib\net47\MimeKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.6.0\lib\net462\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Formats.Asn1, Version=8.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Formats.Asn1.8.0.1\lib\net462\System.Formats.Asn1.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.6.0\lib\net462\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.6.0\lib\net462\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.0\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.6.0\lib\net462\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -115,6 +169,18 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Abstractions, Version=5.11.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Abstractions.5.11.1\lib\net47\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.11.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Container.5.11.1\lib\net47\Unity.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mvc, Version=5.11.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Mvc.5.11.1\lib\net47\Unity.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -133,11 +199,20 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\UnityConfig.cs" />
+    <Compile Include="App_Start\UnityMvcActivator.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="MailKitSettings.cs" />
+    <Compile Include="OwinStartup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Extensions\ViewExtensions.cs" />
+    <Compile Include="ViewModel\AccountLoginVM.cs" />
+    <Compile Include="ViewModel\AccountRoleVM.cs" />
+    <Compile Include="ViewModel\AccountUsersVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -156,7 +231,98 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\static\admin1\assets\assets\demo\chart-area-demo.js" />
+    <Content Include="Content\static\admin1\assets\assets\demo\chart-bar-demo.js" />
+    <Content Include="Content\static\admin1\assets\assets\demo\chart-pie-demo.js" />
+    <Content Include="Content\static\admin1\assets\assets\demo\datatables-demo.js" />
+    <Content Include="Content\static\admin1\assets\assets\img\error-404-monochrome.svg" />
+    <Content Include="Content\static\admin1\assets\css\styles.css" />
+    <Content Include="Content\static\admin1\assets\js\bootstrap.min.js" />
+    <Content Include="Content\static\admin1\assets\js\datatables-simple-demo.js" />
+    <Content Include="Content\static\admin1\assets\js\jquery-3.2.1.slim.min.js" />
+    <Content Include="Content\static\admin1\assets\js\jquery-3.6.0.js" />
+    <Content Include="Content\static\admin1\assets\js\jquery-3.6.0.min.js" />
+    <Content Include="Content\static\admin1\assets\js\JQuery3.3.1.js" />
+    <Content Include="Content\static\admin1\assets\js\lightslider.js" />
+    <Content Include="Content\static\admin1\assets\js\popper.min.js" />
+    <Content Include="Content\static\admin1\assets\js\scripts.js" />
+    <Content Include="Content\static\user\assets\css\animate.min.css" />
+    <Content Include="Content\static\user\assets\css\bootstrap-select.min.css" />
+    <Content Include="Content\static\user\assets\css\custom-bs.css" />
+    <Content Include="Content\static\user\assets\css\jquery.fancybox.min.css" />
+    <Content Include="Content\static\user\assets\css\owl.carousel.min.css" />
+    <Content Include="Content\static\user\assets\css\quill.snow.css" />
+    <Content Include="Content\static\user\assets\css\style.css" />
+    <Content Include="Content\static\user\assets\fonts\icomoon\demo-files\demo.css" />
+    <Content Include="Content\static\user\assets\fonts\icomoon\demo-files\demo.js" />
+    <Content Include="Content\static\user\assets\fonts\icomoon\demo.html" />
+    <Content Include="Content\static\user\assets\fonts\icomoon\fonts\icomoon.svg" />
+    <Content Include="Content\static\user\assets\fonts\icomoon\Read Me.txt" />
+    <Content Include="Content\static\user\assets\fonts\icomoon\style.css" />
+    <Content Include="Content\static\user\assets\fonts\line-icons\demo-files\demo.css" />
+    <Content Include="Content\static\user\assets\fonts\line-icons\demo-files\demo.js" />
+    <Content Include="Content\static\user\assets\fonts\line-icons\demo.html" />
+    <Content Include="Content\static\user\assets\fonts\line-icons\fonts\icomoon.svg" />
+    <Content Include="Content\static\user\assets\fonts\line-icons\Read Me.txt" />
+    <Content Include="Content\static\user\assets\fonts\line-icons\style.css" />
+    <Content Include="Content\static\user\assets\images\apps.png" />
+    <Content Include="Content\static\user\assets\images\hero_1.jpg" />
+    <Content Include="Content\static\user\assets\images\img_1.jpg" />
+    <Content Include="Content\static\user\assets\images\img_2.jpg" />
+    <Content Include="Content\static\user\assets\images\job_logo_1.jpg" />
+    <Content Include="Content\static\user\assets\images\job_logo_2.jpg" />
+    <Content Include="Content\static\user\assets\images\job_logo_3.jpg" />
+    <Content Include="Content\static\user\assets\images\job_logo_4.jpg" />
+    <Content Include="Content\static\user\assets\images\job_logo_5.jpg" />
+    <Content Include="Content\static\user\assets\images\job_single_img_1.jpg" />
+    <Content Include="Content\static\user\assets\images\logo_airbnb.svg" />
+    <Content Include="Content\static\user\assets\images\logo_apple.svg" />
+    <Content Include="Content\static\user\assets\images\logo_mailchimp.svg" />
+    <Content Include="Content\static\user\assets\images\logo_paypal.svg" />
+    <Content Include="Content\static\user\assets\images\logo_sony.svg" />
+    <Content Include="Content\static\user\assets\images\logo_stripe.svg" />
+    <Content Include="Content\static\user\assets\images\logo_tinder.svg" />
+    <Content Include="Content\static\user\assets\images\logo_visa.svg" />
+    <Content Include="Content\static\user\assets\images\person_1.jpg" />
+    <Content Include="Content\static\user\assets\images\person_2.jpg" />
+    <Content Include="Content\static\user\assets\images\person_3.jpg" />
+    <Content Include="Content\static\user\assets\images\person_4.jpg" />
+    <Content Include="Content\static\user\assets\images\person_5.jpg" />
+    <Content Include="Content\static\user\assets\images\person_6.jpg" />
+    <Content Include="Content\static\user\assets\images\person_transparent.png" />
+    <Content Include="Content\static\user\assets\images\person_transparent_2.png" />
+    <Content Include="Content\static\user\assets\images\quote.png" />
+    <Content Include="Content\static\user\assets\images\sq_img_1.jpg" />
+    <Content Include="Content\static\user\assets\images\sq_img_10.jpg" />
+    <Content Include="Content\static\user\assets\images\sq_img_11.jpg" />
+    <Content Include="Content\static\user\assets\images\sq_img_12.jpg" />
+    <Content Include="Content\static\user\assets\images\sq_img_13.jpg" />
+    <Content Include="Content\static\user\assets\images\sq_img_2.jpg" />
+    <Content Include="Content\static\user\assets\images\sq_img_3.jpg" />
+    <Content Include="Content\static\user\assets\images\sq_img_4.jpg" />
+    <Content Include="Content\static\user\assets\images\sq_img_5.jpg" />
+    <Content Include="Content\static\user\assets\images\sq_img_6.jpg" />
+    <Content Include="Content\static\user\assets\images\sq_img_7.jpg" />
+    <Content Include="Content\static\user\assets\images\sq_img_8.jpg" />
+    <Content Include="Content\static\user\assets\images\sq_img_9.jpg" />
+    <Content Include="Content\static\user\assets\js\bootstrap-select.min.js" />
+    <Content Include="Content\static\user\assets\js\bootstrap.bundle.min.js" />
+    <Content Include="Content\static\user\assets\js\custom.js" />
+    <Content Include="Content\static\user\assets\js\isotope.pkgd.min.js" />
+    <Content Include="Content\static\user\assets\js\jquery.animateNumber.min.js" />
+    <Content Include="Content\static\user\assets\js\jquery.easing.1.3.js" />
+    <Content Include="Content\static\user\assets\js\jquery.fancybox.min.js" />
+    <Content Include="Content\static\user\assets\js\jquery.min.js" />
+    <Content Include="Content\static\user\assets\js\jquery.waypoints.min.js" />
+    <Content Include="Content\static\user\assets\js\owl.carousel.min.js" />
+    <Content Include="Content\static\user\assets\js\quill.min.js" />
+    <Content Include="Content\static\user\assets\js\stickyfill.min.js" />
+    <Content Include="css\font-awesome.css" />
+    <Content Include="css\font-awesome.min.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -165,17 +331,206 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <None Include="Scripts\jquery-3.7.0.intellisense.js" />
-    <Content Include="Scripts\jquery-3.7.0.js" />
-    <Content Include="Scripts\jquery-3.7.0.min.js" />
-    <Content Include="Scripts\jquery-3.7.0.slim.js" />
-    <Content Include="Scripts\jquery-3.7.0.slim.min.js" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\static\user\assets\bs4\scss\bootstrap-grid.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\bootstrap-reboot.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\bootstrap.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_alert.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_background-variant.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_badge.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_border-radius.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_box-shadow.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_breakpoints.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_buttons.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_caret.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_clearfix.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_deprecate.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_float.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_forms.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_gradients.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_grid-framework.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_grid.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_hover.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_image.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_list-group.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_lists.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_nav-divider.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_pagination.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_reset-text.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_resize.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_screen-reader.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_size.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_table-row.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_text-emphasis.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_text-hide.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_text-truncate.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_transition.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\mixins\_visibility.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_align.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_background.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_borders.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_clearfix.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_display.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_embed.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_flex.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_float.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_overflow.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_position.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_screenreaders.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_shadows.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_sizing.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_spacing.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_stretched-link.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_text.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\utilities\_visibility.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\vendor\_rfs.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_alert.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_badge.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_breadcrumb.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_button-group.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_buttons.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_card.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_carousel.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_close.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_code.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_custom-forms.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_dropdown.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_forms.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_functions.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_grid.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_images.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_input-group.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_jumbotron.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_list-group.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_media.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_mixins.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_modal.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_nav.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_navbar.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_pagination.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_popover.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_print.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_progress.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_reboot.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_root.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_spinners.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_tables.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_toasts.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_tooltip.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_transitions.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_type.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_utilities.scss" />
+    <Content Include="Content\static\user\assets\bs4\scss\_variables.scss" />
+    <Content Include="Content\static\user\assets\css\custom-bs.css.map" />
+    <Content Include="Content\static\user\assets\fonts\icomoon\fonts\icomoon.eot" />
+    <Content Include="Content\static\user\assets\fonts\icomoon\fonts\icomoon.ttf" />
+    <Content Include="Content\static\user\assets\fonts\icomoon\fonts\icomoon.woff" />
+    <Content Include="Content\static\user\assets\fonts\icomoon\selection.json" />
+    <Content Include="Content\static\user\assets\fonts\line-icons\fonts\icomoon.eot" />
+    <Content Include="Content\static\user\assets\fonts\line-icons\fonts\icomoon.ttf" />
+    <Content Include="Content\static\user\assets\fonts\line-icons\fonts\icomoon.woff" />
+    <Content Include="Content\static\user\assets\fonts\line-icons\selection.json" />
+    <Content Include="Content\static\user\assets\scss\custom-bs.scss" />
+    <Content Include="Content\static\user\assets\scss\style.scss" />
+    <Content Include="Content\static\user\assets\scss\_custom-variables.scss" />
+    <Content Include="Content\static\user\assets\scss\_site-navbar.scss" />
+    <Content Include="Scripts\esm\popper-utils.js" />
+    <Content Include="Scripts\esm\popper-utils.min.js" />
+    <Content Include="Scripts\esm\popper.js" />
+    <Content Include="Scripts\esm\popper.min.js" />
+    <Content Include="Scripts\index.js.flow" />
+    <Content Include="Scripts\esm\popper.min.js.map" />
+    <Content Include="Scripts\esm\popper.js.map" />
+    <Content Include="Scripts\esm\popper-utils.min.js.map" />
+    <Content Include="Scripts\esm\popper-utils.js.map" />
+    <None Include="Scripts\jquery-3.7.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.7.1.js" />
+    <Content Include="Scripts\jquery-3.7.1.min.js" />
+    <Content Include="Scripts\jquery-3.7.1.slim.js" />
+    <Content Include="Scripts\jquery-3.7.1.slim.min.js" />
+    <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.7.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\popper-utils.js" />
+    <Content Include="Scripts\popper-utils.min.js" />
+    <Content Include="Scripts\popper.js" />
+    <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\src\index.js" />
+    <Content Include="Scripts\src\methods\defaults.js" />
+    <Content Include="Scripts\src\methods\destroy.js" />
+    <Content Include="Scripts\src\methods\disableEventListeners.js" />
+    <Content Include="Scripts\src\methods\enableEventListeners.js" />
+    <Content Include="Scripts\src\methods\placements.js" />
+    <Content Include="Scripts\src\methods\update.js" />
+    <Content Include="Scripts\src\modifiers\applyStyle.js" />
+    <Content Include="Scripts\src\modifiers\arrow.js" />
+    <Content Include="Scripts\src\modifiers\computeStyle.js" />
+    <Content Include="Scripts\src\modifiers\flip.js" />
+    <Content Include="Scripts\src\modifiers\hide.js" />
+    <Content Include="Scripts\src\modifiers\index.js" />
+    <Content Include="Scripts\src\modifiers\inner.js" />
+    <Content Include="Scripts\src\modifiers\keepTogether.js" />
+    <Content Include="Scripts\src\modifiers\offset.js" />
+    <Content Include="Scripts\src\modifiers\preventOverflow.js" />
+    <Content Include="Scripts\src\modifiers\shift.js" />
+    <Content Include="Scripts\src\utils\clockwise.js" />
+    <Content Include="Scripts\src\utils\computeAutoPlacement.js" />
+    <Content Include="Scripts\src\utils\debounce.js" />
+    <Content Include="Scripts\src\utils\find.js" />
+    <Content Include="Scripts\src\utils\findCommonOffsetParent.js" />
+    <Content Include="Scripts\src\utils\findIndex.js" />
+    <Content Include="Scripts\src\utils\getBordersSize.js" />
+    <Content Include="Scripts\src\utils\getBoundaries.js" />
+    <Content Include="Scripts\src\utils\getBoundingClientRect.js" />
+    <Content Include="Scripts\src\utils\getClientRect.js" />
+    <Content Include="Scripts\src\utils\getFixedPositionOffsetParent.js" />
+    <Content Include="Scripts\src\utils\getOffsetParent.js" />
+    <Content Include="Scripts\src\utils\getOffsetRect.js" />
+    <Content Include="Scripts\src\utils\getOffsetRectRelativeToArbitraryNode.js" />
+    <Content Include="Scripts\src\utils\getOppositePlacement.js" />
+    <Content Include="Scripts\src\utils\getOppositeVariation.js" />
+    <Content Include="Scripts\src\utils\getOuterSizes.js" />
+    <Content Include="Scripts\src\utils\getParentNode.js" />
+    <Content Include="Scripts\src\utils\getPopperOffsets.js" />
+    <Content Include="Scripts\src\utils\getReferenceNode.js" />
+    <Content Include="Scripts\src\utils\getReferenceOffsets.js" />
+    <Content Include="Scripts\src\utils\getRoot.js" />
+    <Content Include="Scripts\src\utils\getRoundedOffsets.js" />
+    <Content Include="Scripts\src\utils\getScroll.js" />
+    <Content Include="Scripts\src\utils\getScrollParent.js" />
+    <Content Include="Scripts\src\utils\getStyleComputedProperty.js" />
+    <Content Include="Scripts\src\utils\getSupportedPropertyName.js" />
+    <Content Include="Scripts\src\utils\getViewportOffsetRectRelativeToArtbitraryNode.js" />
+    <Content Include="Scripts\src\utils\getWindow.js" />
+    <Content Include="Scripts\src\utils\getWindowSizes.js" />
+    <Content Include="Scripts\src\utils\includeScroll.js" />
+    <Content Include="Scripts\src\utils\index.js" />
+    <Content Include="Scripts\src\utils\isBrowser.js" />
+    <Content Include="Scripts\src\utils\isFixed.js" />
+    <Content Include="Scripts\src\utils\isFunction.js" />
+    <Content Include="Scripts\src\utils\isIE.js" />
+    <Content Include="Scripts\src\utils\isModifierEnabled.js" />
+    <Content Include="Scripts\src\utils\isModifierRequired.js" />
+    <Content Include="Scripts\src\utils\isNumeric.js" />
+    <Content Include="Scripts\src\utils\isOffsetContainer.js" />
+    <Content Include="Scripts\src\utils\removeEventListeners.js" />
+    <Content Include="Scripts\src\utils\runModifiers.js" />
+    <Content Include="Scripts\src\utils\setAttributes.js" />
+    <Content Include="Scripts\src\utils\setStyles.js" />
+    <Content Include="Scripts\src\utils\setupEventListeners.js" />
+    <Content Include="Scripts\umd\popper-utils.js" />
+    <Content Include="Scripts\umd\popper-utils.min.js" />
+    <Content Include="Scripts\umd\popper.js" />
+    <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -190,6 +545,19 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Scripts\umd\popper.min.js.map" />
+    <Content Include="Scripts\umd\popper.js.map" />
+    <Content Include="Scripts\umd\popper.js.flow" />
+    <Content Include="Scripts\umd\popper-utils.min.js.map" />
+    <Content Include="Scripts\umd\popper-utils.js.map" />
+    <Content Include="Scripts\README.md" />
+    <Content Include="Scripts\popper.min.js.map" />
+    <Content Include="Scripts\popper.js.map" />
+    <Content Include="Scripts\popper-utils.min.js.map" />
+    <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\Account\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -219,8 +587,22 @@
     <Content Include="Scripts\bootstrap.esm.js.map" />
     <Content Include="Scripts\bootstrap.bundle.min.js.map" />
     <Content Include="Scripts\bootstrap.bundle.js.map" />
-    <Content Include="Scripts\jquery-3.7.0.slim.min.map" />
-    <Content Include="Scripts\jquery-3.7.0.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Donation.IdentityModels\Donation.IdentityModels.csproj">
+      <Project>{55fbde04-6675-46c2-bd2a-486982d3eb5b}</Project>
+      <Name>Donation.IdentityModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Donation.IdentityService\Donation.IdentityServices.csproj">
+      <Project>{dee1d4d7-fe8c-4f2e-b55e-f417eb0feffb}</Project>
+      <Name>Donation.IdentityServices</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Scripts\index.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -257,8 +639,11 @@
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.TypeScript.MSBuild.5.8.3\build\Microsoft.TypeScript.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.TypeScript.MSBuild.5.8.3\build\Microsoft.TypeScript.MSBuild.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.TypeScript.MSBuild.5.8.3\build\Microsoft.TypeScript.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.TypeScript.MSBuild.5.8.3\build\Microsoft.TypeScript.MSBuild.targets'))" />
   </Target>
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
+  <Import Project="..\packages\Microsoft.TypeScript.MSBuild.5.8.3\build\Microsoft.TypeScript.MSBuild.targets" Condition="Exists('..\packages\Microsoft.TypeScript.MSBuild.5.8.3\build\Microsoft.TypeScript.MSBuild.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

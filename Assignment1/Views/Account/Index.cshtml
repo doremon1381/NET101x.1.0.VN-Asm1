@@ -1,0 +1,535 @@
+﻿
+@{
+    ViewBag.Title = "Account";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Danh sách người dùng</h1>
+    <div class="card mb-4 w-100">
+        <div class="card-header">
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalAdd">
+                    Thêm mới
+                </button>
+                @using (Html.BeginForm("Index", "Account", FormMethod.Get,
+                    new { @class = "form d-flex align-items-center justify-content-center gap-2" }))
+                {
+                    @*@Html.Label("Search", new { @class = "mr-1" })*@
+                    @Html.TextBox("phoneNumberOrEmail", ViewBag.Search as string, new { @class = "form-control", placeholder = "search" })
+                    <button type="submit" class="btn btn-success">Search</button>
+                }
+            </div>
+
+            <!-- Modal Add-->
+            <div class="modal fade" id="exampleModalAdd" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabelll">Thêm mới</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            @using (Html.BeginForm("AddUser", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="addname"
+                                               class="col-form-label">First name:</label>
+                                        <input type="text" class="form-control"
+                                               id="addname" name="firstName" required>
+                                        <label for="addname"
+                                               class="col-form-label">Last name:</label>
+                                        <input type="text" class="form-control"
+                                               id="addname" name="lastName" required />
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="addcost"
+                                               class="col-form-label">Email:</label>
+                                        <input type="email" class="form-control"
+                                               id="addcost" name="email" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="addname"
+                                               class="col-form-label">Số điện thoại:</label>
+                                        <input type="text" class="form-control"
+                                               id="addname" name="phoneNumber" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="addcost"
+                                               class="col-form-label">Địa chỉ:</label>
+                                        <input type="text" class="form-control"
+                                               id="addcost" name="address" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="addname"
+                                               class="col-form-label">Tài khoản:</label>
+                                        <input type="text" class="form-control"
+                                               id="addname" name="userName" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="addcost"
+                                               class="col-form-label">Mật khẩu:</label>
+                                        <input type="password" class="form-control"
+                                               id="addcost" name="password" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="ct_id" class="col-form-label">Vai trò:</label>
+                                        <select class="form-control" id="ct_id" name="idRole" required>
+                                            <option value="" selected>Chọn loại vai trò</option>
+                                            @foreach (var item in (SelectList)ViewBag.Roles)
+                                            {
+                                                <option value="@item.Value">
+                                                    @item.Text
+                                                </option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                    <button type="submit" class="btn btn-primary">Thêm </button>
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Add-->
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple">
+                <thead>
+                    @*style="background-color: gray !important;"*@
+                    <tr>
+                        <th style="width:15%">
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.SortDesc)
+                            {
+                                <a href="/account/index?sortColumn=FullName&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Họ tên</a>
+                                if (ViewBag.SortColumn == "FullName")
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/account/index?sortColumn=FullName&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Họ tên</a>
+                                if (ViewBag.SortColumn == "FullName")
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th style="width:18%">
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.SortDesc)
+                            {
+                                <a href="/account/index?sortColumn=Email&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Email</a>
+                                if (ViewBag.SortColumn == "Email")
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/account/index?sortColumn=Email&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Email</a>
+                                if (ViewBag.SortColumn == "Email")
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th style="width:12%">
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.SortDesc)
+                            {
+                                <a href="/account/index?sortColumn=PhoneNumber&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Số điện thoại</a>
+                                if (ViewBag.SortColumn == "PhoneNumber")
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/account/index?sortColumn=PhoneNumber&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Số điện thoại</a>
+                                if (ViewBag.SortColumn == "PhoneNumber")
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <!--                <th>Địa chỉ</th>-->
+                        <th style="width:10%">
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.SortDesc)
+                            {
+                                <a href="/account/index?sortColumn=UserName&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Tài khoản</a>
+                                if (ViewBag.SortColumn == "UserName")
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/account/index?sortColumn=UserName&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Tài khoản</a>
+                                if (ViewBag.SortColumn == "UserName")
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th style="width:12%">
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.SortDesc)
+                            {
+                                <a href="/account/index?sortColumn=Roles&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Vai trò</a>
+                                if (ViewBag.SortColumn == "Roles")
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/account/index?sortColumn=Roles&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Vai trò</a>
+                                if (ViewBag.SortColumn == "Roles")
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th style="width:10%">
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.SortDesc)
+                            {
+                                <a href="/account/index?sortColumn=Active&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Trạng thái</a>
+                                if (ViewBag.SortColumn == "Active")
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/account/index?sortColumn=Active&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Trạng thái</a>
+                                if (ViewBag.SortColumn == "Active")
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+
+                        </th>
+                        <th style="width:auto">Hành động</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @*<input type="hidden" th:value="${list.size()}" id="dodai" />*@
+                    @foreach (var user in (IEnumerable<Assignment1.ViewModel.AccountUsersVM>)ViewBag.Users)
+                    {
+                        <tr>
+                            <td>@user.FullName</td>
+                            <td>@user.Email</td>
+                            <td>@user.PhoneNumber</td>
+                            <td>@user.UserName</td>
+                            <td>@user.Role</td>
+                            <td>
+                                @if (user.Active)
+                                {
+                                    <p style="color: #1c7430;font-weight: bold">Hoạt động</p>
+                                }
+                                else
+                                {
+                                    <p style="color: red;font-weight: bold">Đã khóa</p>
+                                }
+                            </td>
+                            <td style="width : 270px">
+                                <button type="button" style="width: 80px" class="btn btn-success" data-bs-toggle="modal"
+                                        data-bs-target="#idModelMail@(user.UserId)">
+                                    Gửi
+                                </button>
+                                <button type="button" style="width: 80px" class="btn btn-warning" data-bs-toggle="modal"
+                                        data-bs-target="#idModelDetail@(user.UserId)">
+                                    Chi tiết
+                                </button>
+                                @if (user.Role == Donation.IdentityServices.Roles.ADMIN)
+                                {
+                                    if (user.UserId == ((System.Security.Claims.ClaimsIdentity)User.Identity).FindFirst(c => c.Type == System.IdentityModel.Claims.ClaimTypes.Sid).Value)
+                                    {
+                                        <button type="button" style="width: 80px" class="btn btn-primary" data-bs-toggle="modal"
+                                                data-bs-target="#exampleModal@(user.UserId)">
+                                            Sửa
+                                        </button>
+                                        <button type="button" style="width: 80px" class="btn btn-danger mt-1" data-bs-toggle="modal"
+                                                data-bs-target="#idModelDel@(user.UserId)">
+                                            Xóa
+                                        </button>
+                                        if (user.Active)
+                                        {
+                                            using (Html.BeginForm("Lock", "Account", FormMethod.Post, new { style = "margin-left: 85px;margin-top: -38px" }))
+                                            {
+                                                <input type="hidden" class="form-control" id="id" name="idUser" value="@user.UserId">
+                                                <button type="submit" style="width: 80px" class="btn btn-danger">
+                                                    Khóa
+                                                </button>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            using (Html.BeginForm("UnLock", "Account", FormMethod.Post, new { style = "margin-left: 85px;margin-top: -38px" }))
+                                            {
+                                                <input type="hidden" class="form-control" id="id" name="idUser" value="@user.UserId">
+                                                <button type="submit" style="width: 80px" class="btn btn-success">
+                                                    Mở
+                                                </button>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <button type="button" style="width: 80px" class="btn btn-primary" data-bs-toggle="modal" disabled
+                                                data-bs-target="#exampleModal@(user.UserId)">
+                                            Sửa
+                                        </button>
+                                        <button type="button" style="width: 80px" class="btn btn-danger mt-1" data-bs-toggle="modal" disabled
+                                                data-bs-target="#idModelDel@(user.UserId)">
+                                            Xóa
+                                        </button>
+                                        if (user.Active)
+                                        {
+                                            using (Html.BeginForm("Lock", "Account", FormMethod.Post, new { style = "margin-left: 85px;margin-top: -38px" }))
+                                            {
+                                                <input type="hidden" class="form-control" id="id" name="idUser" value="@user.UserId">
+                                                <button type="submit" style="width: 80px" class="btn btn-danger" disabled>
+                                                    Khóa
+                                                </button>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            using (Html.BeginForm("UnLock", "Account", FormMethod.Post, new { style = "margin-left: 85px;margin-top: -38px" }))
+                                            {
+                                                <input type="hidden" class="form-control" id="id" name="idUser" value="@user.UserId">
+                                                <button type="submit" style="width: 80px" class="btn btn-success" disabled>
+                                                    Mở
+                                                </button>
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <button type="button" style="width: 80px" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal@(user.UserId)">
+                                        Sửa
+                                    </button>
+                                    <button type="button" style="width: 80px" class="btn btn-danger mt-1" data-bs-toggle="modal"
+                                            data-bs-target="#idModelDel@(user.UserId)">
+                                        Xóa
+                                    </button>
+                                    if (user.Active)
+                                    {
+                                        using (Html.BeginForm("Lock", "Account", FormMethod.Post, new { style = "margin-left: 85px;margin-top: -38px" }))
+                                        {
+                                            <input type="hidden" class="form-control" id="id" name="idUser" value="@user.UserId">
+                                            <button type="submit" style="width: 80px" class="btn btn-danger">
+                                                Khóa
+                                            </button>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        using (Html.BeginForm("UnLock", "Account", FormMethod.Post, new { style = "margin-left: 85px;margin-top: -38px" }))
+                                        {
+                                            <input type="hidden" class="form-control" id="id" name="idUser" value="@user.UserId">
+                                            <button type="submit" style="width: 80px" class="btn btn-success">
+                                                Mở
+                                            </button>
+                                        }
+                                    }
+                                }
+
+                                <div class="modal fade" id="idModelDel@(user.UserId)" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Bạn chắc chắn muốn xóa ?</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Người dùng : <span>@(user.UserName)</span>
+                                                @using (Html.BeginForm("delete", "Account", FormMethod.Post))
+                                                {
+                                                    <input type="hidden" class="form-control" id="id" name="idUser" value="@(user.UserId)">
+                                                    <div class="modal-footer" style="margin-top: 20px">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">
+                                                            Close
+                                                        </button>
+                                                        <button type="submit" class="btn btn-danger">Xóa</button>
+                                                    </div>
+                                                }
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="idModelMail@(user.UserId)" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Gửi đến: <span>@(user.Email)</span></h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                @using (Html.BeginForm("sendMail", "Account", FormMethod.Post))
+                                                {
+                                                    <input type="hidden" class="form-control" id="id" name="idUser" value="@(user.UserId)">
+                                                    <label for="addname"
+                                                           class="col-form-label">Nội dung:</label>
+                                                    <textarea rows="10" class="form-control" id="addname" name="note"></textarea>
+                                                    <div class="modal-footer" style="margin-top: 20px">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">
+                                                            Đóng
+                                                        </button>
+                                                        <button type="submit" class="btn btn-success">Gửi</button>
+
+                                                    </div>
+                                                }
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="idModelDetail@(user.UserId)" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Chi tiết : <span>@(user.FullName)</span></h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <h5>Họ tên :</h5> <p>@(user.FullName)</p>
+                                                        <h5>Email:</h5> <p>@(user.Email)</p>
+                                                        <h5>Số điện thoại:</h5> <p>@(user.PhoneNumber)</p>
+                                                        <h5>Tài khoản:</h5> <p>@(user.UserName)</p>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <h5>Địa chỉ :</h5> <p>@(user.Address)</p>
+                                                        <h5>Vai trò:</h5> <p>@(user.Role)</p>
+                                                        @*<h5>Lần đăng nhập gần nhất:</h5> <p th:text="${user.createdAt}"></p>*@
+                                                        <h5>Note:</h5> <p>@(user.Notes)</p>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Modal Update-->
+                            <div class="modal fade" id="exampleModal@(user.UserId)" tabindex="-1"
+                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg ">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabell">Cập nhật</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            @using (Html.BeginForm("update", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                            {
+                                                <input type="hidden" name="id">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <label for="addname"
+                                                               class="col-form-label">Họ và tên:</label>
+                                                        <input type="text" class="form-control" @(User.IsInRole(Donation.IdentityServices.Roles.ADMIN) && user.UserId != ((System.Security.Claims.ClaimsIdentity)User.Identity).FindFirst(c => c.Type == System.IdentityModel.Claims.ClaimTypes.Sid).Value ? "readonly" : "")
+                                                               id="addname" name="fullName" required value="@user.FullName">
+                                                        <input type="text" name="firstName" value="@user.FirstName" hidden />
+                                                        <input type="text" name="lastName" value="@user.LastName" hidden />
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label for="addcost"
+                                                               class="col-form-label">Email:</label>
+                                                        <input type="email" class="form-control"
+                                                               id="addcost" name="email" required value="@(user.Email)" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <label for="addname"
+                                                               class="col-form-label">Số điện thoại:</label>
+                                                        <input type="text" class="form-control"
+                                                               id="addname" name="phoneNumber" required @(User.IsInRole(Donation.IdentityServices.Roles.ADMIN) && user.UserId != ((System.Security.Claims.ClaimsIdentity)User.Identity).FindFirst(c => c.Type == System.IdentityModel.Claims.ClaimTypes.Sid).Value ? "readonly" : "")
+                                                               value="@(user.PhoneNumber)">
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label for="addcost"
+                                                               class="col-form-label">Địa chỉ:</label>
+                                                        <input type="text" class="form-control"
+                                                               id="addcost" name="address" required @(User.IsInRole(Donation.IdentityServices.Roles.ADMIN) && user.UserId != ((System.Security.Claims.ClaimsIdentity)User.Identity).FindFirst(c => c.Type == System.IdentityModel.Claims.ClaimTypes.Sid).Value ? "readonly" : "")
+                                                               value="@(user.Address)">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <label for="addname"
+                                                               class="col-form-label">Tài khoản:</label>
+                                                        <input readonly type="text" class="form-control"
+                                                               id="addname" name="userName" required value="@(user.UserName)">
+                                                        <input readonly type="hidden" class="form-control"
+                                                               id="addname" name="idUser" required value="@(user.UserId)">
+                                                        @*<input readonly type="hidden" class="form-control"
+                                                            id="addname" name="password" required>*@
+                                                        @*<input readonly type="hidden" class="form-control"
+                                                            id="addname" name="status" required value="@(user.Notes)">*@
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label for="ct_id" class="col-form-label">Vai trò:</label>
+                                                        <select class="form-control" id="ct_id" name="idRole" required>
+                                                            @foreach (var item in (SelectList)ViewBag.Roles)
+                                                            {
+                                                                <option value="@item.Value" @(user.Role == item.Text ? "selected" : "")
+                                                                        @( (user.Role != item.Text && User.IsInRole(Donation.IdentityServices.Roles.ADMIN) ? "" : "disable") )>
+                                                                    @item.Text
+                                                                </option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                    <button type="submit" class="btn btn-primary">Lưu </button>
+                                                </div>
+
+                                                @Html.ValidationSummary()
+                                            }
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Modal Update-->
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -4,3 +4,8 @@ Assignment1/obj/
 packages/
 Donation.Models/obj/
 Donation.Models/bin/
+Donation.IdentityModels/obj/
+Donation.IdentityService/bin/
+Donation.IdentityService/obj/
+Donation.IdentityModels/bin/
+Assignment1/MailKitSettings.cs
