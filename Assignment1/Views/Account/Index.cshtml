@@ -16,7 +16,7 @@
                     new { @class = "form d-flex align-items-center justify-content-center gap-2" }))
                 {
                     @*@Html.Label("Search", new { @class = "mr-1" })*@
-                    @Html.TextBox("phoneNumberOrEmail", ViewBag.Search as string, new { @class = "form-control", placeholder = "search" })
+                    @Html.TextBox("phoneNumberOrEmail", ViewBag.Search as string, new {id = "phoneNumberOrEmail", @class = "form-control", placeholder = "search" })
                     <button type="submit" class="btn btn-success">Search</button>
                 }
             </div>
@@ -105,15 +105,37 @@
             </div>
             <!-- Modal Add-->
         </div>
+
+        <div class="card-header">
+            <label for="ct_id" class="col-form-label">entries per page</label>
+            <select class="form-control col-2" name="pageCount" id="pageCountSelection">
+                @foreach (var item in (SelectList)ViewBag.PageNumberSelections)
+                {
+                    <option value="@item.Value" @(item.Value == ((int)ViewBag.PageCount).ToString() ? "selected" : "")>@(item.Text)</option>
+                }
+            </select>
+            <script>
+                document.getElementById("pageCountSelection")
+                    .addEventListener("change", function () {
+                        const searchControl = document.getElementById("phoneNumberOrEmail");
+                        const searchValue = searchControl.value;
+
+                        const pageCount = this.value;
+                        if (pageCount)
+                            window.location.href = `/account/index?sortColumn=@ViewBag.SortColumn&pageCount=${pageCount}&phoneNumberOrEmail=${searchValue}&iconClass=@ViewBag.IconClass`;
+                    })
+            </script>
+        </div>
+
         <div class="card-body">
             <table id="datatablesSimple">
                 <thead>
                     @*style="background-color: gray !important;"*@
-                    <tr>
+                    <tr style="background-color: gray !important;">
                         <th style="width:15%">
                             @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.SortDesc)
                             {
-                                <a href="/account/index?sortColumn=FullName&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Họ tên</a>
+                                <a href="/account/index?sortColumn=FullName&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Họ tên</a>
                                 if (ViewBag.SortColumn == "FullName")
                                 {
                                     <i class="fa @ViewBag.IconClass"></i>
@@ -121,7 +143,7 @@
                             }
                             else
                             {
-                                <a href="/account/index?sortColumn=FullName&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Họ tên</a>
+                                <a href="/account/index?sortColumn=FullName&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Họ tên</a>
                                 if (ViewBag.SortColumn == "FullName")
                                 {
                                     <i class="fa @ViewBag.IconClass" style="color:red"></i>
@@ -131,7 +153,7 @@
                         <th style="width:18%">
                             @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.SortDesc)
                             {
-                                <a href="/account/index?sortColumn=Email&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Email</a>
+                                <a href="/account/index?sortColumn=Email&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Email</a>
                                 if (ViewBag.SortColumn == "Email")
                                 {
                                     <i class="fa @ViewBag.IconClass"></i>
@@ -139,7 +161,7 @@
                             }
                             else
                             {
-                                <a href="/account/index?sortColumn=Email&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Email</a>
+                                <a href="/account/index?sortColumn=Email&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Email</a>
                                 if (ViewBag.SortColumn == "Email")
                                 {
                                     <i class="fa @ViewBag.IconClass" style="color:red"></i>
@@ -149,7 +171,7 @@
                         <th style="width:12%">
                             @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.SortDesc)
                             {
-                                <a href="/account/index?sortColumn=PhoneNumber&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Số điện thoại</a>
+                                <a href="/account/index?sortColumn=PhoneNumber&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Số điện thoại</a>
                                 if (ViewBag.SortColumn == "PhoneNumber")
                                 {
                                     <i class="fa @ViewBag.IconClass"></i>
@@ -157,7 +179,7 @@
                             }
                             else
                             {
-                                <a href="/account/index?sortColumn=PhoneNumber&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Số điện thoại</a>
+                                <a href="/account/index?sortColumn=PhoneNumber&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Số điện thoại</a>
                                 if (ViewBag.SortColumn == "PhoneNumber")
                                 {
                                     <i class="fa @ViewBag.IconClass" style="color:red"></i>
@@ -168,7 +190,7 @@
                         <th style="width:10%">
                             @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.SortDesc)
                             {
-                                <a href="/account/index?sortColumn=UserName&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Tài khoản</a>
+                                <a href="/account/index?sortColumn=UserName&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Tài khoản</a>
                                 if (ViewBag.SortColumn == "UserName")
                                 {
                                     <i class="fa @ViewBag.IconClass"></i>
@@ -176,7 +198,7 @@
                             }
                             else
                             {
-                                <a href="/account/index?sortColumn=UserName&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Tài khoản</a>
+                                <a href="/account/index?sortColumn=UserName&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Tài khoản</a>
                                 if (ViewBag.SortColumn == "UserName")
                                 {
                                     <i class="fa @ViewBag.IconClass" style="color:red"></i>
@@ -186,7 +208,7 @@
                         <th style="width:12%">
                             @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.SortDesc)
                             {
-                                <a href="/account/index?sortColumn=Roles&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Vai trò</a>
+                                <a href="/account/index?sortColumn=Roles&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Vai trò</a>
                                 if (ViewBag.SortColumn == "Roles")
                                 {
                                     <i class="fa @ViewBag.IconClass"></i>
@@ -194,7 +216,7 @@
                             }
                             else
                             {
-                                <a href="/account/index?sortColumn=Roles&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Vai trò</a>
+                                <a href="/account/index?sortColumn=Roles&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Vai trò</a>
                                 if (ViewBag.SortColumn == "Roles")
                                 {
                                     <i class="fa @ViewBag.IconClass" style="color:red"></i>
@@ -204,7 +226,7 @@
                         <th style="width:10%">
                             @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.SortDesc)
                             {
-                                <a href="/account/index?sortColumn=Active&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Trạng thái</a>
+                                <a href="/account/index?sortColumn=Active&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.SortAsc">Trạng thái</a>
                                 if (ViewBag.SortColumn == "Active")
                                 {
                                     <i class="fa @ViewBag.IconClass"></i>
@@ -212,7 +234,7 @@
                             }
                             else
                             {
-                                <a href="/account/index?sortColumn=Active&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Trạng thái</a>
+                                <a href="/account/index?sortColumn=Active&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.SortDesc">Trạng thái</a>
                                 if (ViewBag.SortColumn == "Active")
                                 {
                                     <i class="fa @ViewBag.IconClass" style="color:red"></i>
@@ -228,7 +250,6 @@
                     </tr>
                 </tfoot>
                 <tbody>
-                    @*<input type="hidden" th:value="${list.size()}" id="dodai" />*@
                     @foreach (var user in (IEnumerable<Assignment1.ViewModel.AccountUsersVM>)ViewBag.Users)
                     {
                         <tr>
@@ -441,6 +462,7 @@
                                 </div>
                             </td>
 
+
                             <!-- Modal Update-->
                             <div class="modal fade" id="exampleModal@(user.UserId)" tabindex="-1"
                                  aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -528,6 +550,18 @@
                             <!-- Modal Update-->
                         </tr>
                     }
+                    <tr>
+                        <td colspan="9">
+                            <ul class="pagination justify-content-center">
+                                @for (int i = 0; i < ViewBag.TotalPages; i++)
+                                {
+                                    <li class="page-item @(ViewBag.PageNumber == i+1 ? "active" : "")">
+                                        <a class="page-link" href="/account/index?sortColumn=@ViewBag.SortColumn&pageCount=@ViewBag.PageCount&phoneNumberOrEmail=@ViewBag.Search&iconClass=@ViewBag.IconClass&pageNumber=@(i+1)">@(i+1)</a>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

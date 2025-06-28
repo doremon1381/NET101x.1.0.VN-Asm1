@@ -29,9 +29,9 @@ namespace Assignment1.Controllers
         }
 
         // GET: Account
-        [Authorize]
+        [Authorize(Users = Roles.ADMIN)]
         public ActionResult Index(string phoneNumberOrEmail = "", string sortColumn = "FullName"
-            , string iconClass = "fa-sort-desc", int pageNo = 1)
+            , string iconClass = "fa-sort-desc", int pageCount = 5, int pageNumber = 1)
         {
             if (!User.IsInRole(Roles.ADMIN))
                 throw new Exception("User is not an admin!");
@@ -89,12 +89,26 @@ namespace Assignment1.Controllers
                     : users.OrderBy(p => p.Active);
             }
 
-            users = users.ToList();
+            //users = users.ToList();
 
-            ViewBag.Users = users;
+            //ViewBag.Users = users;
             ViewBag.IconClass = iconClass;
             ViewBag.SortColumn = sortColumn;
             ViewBag.Roles = new SelectList(_identityServices.GetRoles(), "Id", "Name");
+
+            ViewBag.Search = phoneNumberOrEmail;
+
+            ViewBag.PageNumber = pageNumber;
+            ViewBag.PageCount = pageCount;
+            ViewBag.PageNumberSelections = new SelectList(new List<SelectListItem>()
+            {
+                new SelectListItem() { Text = "5", Value = "5" },
+                new SelectListItem() { Text = "10", Value = "10" },
+                new SelectListItem() { Text = "15", Value = "15" }
+            }, "Value", "Text", pageCount.ToString());
+            ViewBag.TotalPages = (int)Math.Ceiling((double)users.Count() / pageCount);
+
+            ViewBag.Users = users.Skip((pageNumber - 1) * pageCount).Take(pageCount).ToList();
 
             return View();
         }
@@ -172,7 +186,7 @@ namespace Assignment1.Controllers
             {
                 // TODO:
                 return View("Error");
-            }            
+            }
         }
 
 
@@ -319,7 +333,7 @@ namespace Assignment1.Controllers
             {
                 return View("Error");
             }
-            
+
         }
 
         private static void SendEmail(string note, AppIdentityUser user)
