@@ -130,4 +130,17 @@
             @(ViewBag.UserRole as string)
         </td>
     </tr>
+    <tr>
+        <th>Trạng thái</th>
+        <td>
+            @if ((bool)ViewBag.Active)
+            {
+                <p style="color: #1c7430;font-weight: bold">Hoạt động</p>
+            }
+            else
+            {
+                <p style="color: red;font-weight: bold">Đã khóa</p>
+            }
+        </td>
+    </tr>
 </table>

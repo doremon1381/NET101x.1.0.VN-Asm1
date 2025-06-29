@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Helpers;
@@ -110,6 +111,11 @@ namespace Donation.IdentityService
                 return null;
             return user;
         }
+
+        //public AppIdentityUser FindIdentityId(IPrincipal user)
+        //{
+        //    return user.Identity.GetUserId();
+        //}
 
         public IdentityRole FindRole(string id)
         {
@@ -256,5 +262,6 @@ namespace Donation.IdentityService
         bool DeleteUser(string id);
         List<AppIdentityUser> GetAllUsers();
         bool IsUserNameExist(string userName);
+        //AppIdentityUser FindIdentityId(IPrincipal user);
     }
 }

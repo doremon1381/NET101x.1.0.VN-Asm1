@@ -287,6 +287,24 @@ namespace Donation.Services
                 .Where(ud => !ud.IsDeleted && ud.DonationId == donationId)
                 .AsEnumerable();
         }
+
+        public UserProfile FindUserProfleById(string id)
+        {
+            var user = _dbContext.UserProfiles.Find(id) ?? throw new Exception("User not found!");
+
+            return user;
+        }
+
+        public bool CreateUserDonation(UserDonation userDonation)
+        {
+            _dbContext.UserDonations.AddOrUpdate(userDonation);
+            return _dbContext.SaveChanges() > 0; // Returns true if the creation was successful
+        }
+
+        public Models.Donation FindDonationById(string id)
+        {
+            return _dbContext.Donations.Find(id) ?? throw new Exception("Donation is not found!");
+        }
     }
 
     public interface IDonationServices
@@ -295,10 +313,13 @@ namespace Donation.Services
         void CreateSampleDonation();
         void CreateSampleUserDonations(string donationId);
         void CreateSampleUserProfiles(List<UserProfile> userProfiles);
+        bool CreateUserDonation(UserDonation userDonation);
         UserProfile CreateUserProfile(UserProfile userProfile);
         Donation.Models.Donation FindById(string donationId, bool userDonationsRequired = false);
         IEnumerable<UserDonation> FindUserDonationByDonationId(string donationId);
         UserDonation FindUserDonationById(string id, bool includeRelatedTable = false);
+        Models.Donation FindDonationById(string id);
+        UserProfile FindUserProfleById(string id);
         IEnumerable<Donation.Models.Donation> GetDonationPlans();
         IEnumerable<UserDonation> GetUserDonations();
         bool SoftDelete(string donationId);

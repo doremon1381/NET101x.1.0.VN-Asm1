@@ -12,7 +12,7 @@ namespace Donation.Models
     public class UserProfile
     {
         [Key]
-        public string UserId { get; set; } = new Guid().ToString();
+        public string UserId { get; set; } = Guid.NewGuid().ToString();
         public string FullName { get; set; } = string.Empty;
         [Required]
         public string Email { get; set; }

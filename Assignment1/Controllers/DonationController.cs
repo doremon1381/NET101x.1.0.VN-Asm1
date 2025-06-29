@@ -103,7 +103,7 @@ namespace Assignment1.Controllers
         [HttpPost]
         [Authorize]
         [AdminOnlyValidation]
-        public ActionResult CreateDonationPlan(string code, string title, DateTime startDate, DateTime endDate, string organization, string organizationPhone, string desciption)
+        public ActionResult CreateDonationPlan(string code, string title, DateTime startDate, DateTime endDate, string organization, string organizationPhone, string description)
         {
             var donation = new Donation.Models.Donation()
             {
@@ -113,7 +113,7 @@ namespace Assignment1.Controllers
                 EndDate = endDate,
                 OrganizationName = organization,
                 OrganizationPhone = organizationPhone,
-                Description = desciption,
+                Description = description,
                 CreatedAt = DateTime.Now
             };
 
@@ -277,6 +277,7 @@ namespace Assignment1.Controllers
             ViewBag.DonationPlans = donations.ToList();
             ViewBag.LastPage = lastPage;
             ViewBag.PageNumber = pageNumber;
+            ViewBag.UserIsActive = _identityServices.FindUserById(User.Identity.GetUserId()).Active;
 
             return View();
         }
@@ -284,6 +285,7 @@ namespace Assignment1.Controllers
         [Authorize]
         public ActionResult UserDonationDetails(string donationId)
         {
+            var identityUser = _identityServices.FindUserById(User.Identity.GetUserId());
             var userDonations = _donationServices.FindUserDonationByDonationId(donationId)
                 .Select(u => new UserDonationVM 
                 {
@@ -292,12 +294,13 @@ namespace Assignment1.Controllers
                     Note = u.Note,
                     CreatedAt = u.CreatedAt,
                     Status = u.Status,
-                    UserFullName = u.UserId != null ? _identityServices.FindUserById(u.UserId)?.FullName : "Unknown User"
+                    UserFullName = u.UserId != null ? identityUser.FullName : "Unknown User"
                 });
             var donationPlan = _donationServices.FindById(donationId);
 
             ViewBag.UserDonations = userDonations.ToList();
             ViewBag.Donation = donationPlan;
+            ViewBag.UserIsActive = identityUser.Active;
 
             return View();
         }
@@ -307,7 +310,16 @@ namespace Assignment1.Controllers
         public ActionResult CreateNewUserDonation(string currentPath, string idDonation, string name, decimal money, string note)
         {
             var user = User;
-            //var userProfile = _donationServices.FindUserProfleById()
+            var userProfile = _donationServices.FindUserProfleById(user.Identity.GetUserId());
+            var donation = _donationServices.FindDonationById(idDonation);
+
+            _ = _donationServices.CreateUserDonation(new UserDonation()
+            {
+                Money = money,
+                Note = note,
+                UserId = userProfile.UserId,
+                DonationId = donation.Id
+            });
 
             return Redirect(currentPath);
         }

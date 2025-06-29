@@ -279,20 +279,21 @@ namespace Assignment1.Controllers
         public ActionResult Details()
         {
             // This action can be used to show details of a specific user.
-            var user = _identityServices.FindUserById(User.Identity.GetUserId());
-            if (user == null)
+            var identity = _identityServices.FindUserById(User.Identity.GetUserId());
+            if (identity == null)
             {
                 // Handle the case where the user is not found
                 return HttpNotFound("User not found");
             }
 
-            var userRole = _identityServices.GetUserRole(user.Id).Name;
+            var userRole = _identityServices.GetUserRole(identity.Id).Name;
             //var userRole = 
 
             ViewBag.Roles = new SelectList(_identityServices.GetRoles(), "Id", "Name");
             ViewBag.UserRole = userRole;
 
-            return View(user);
+            ViewBag.Active = identity.Active;
+            return View(identity);
         }
 
         [HttpPost]

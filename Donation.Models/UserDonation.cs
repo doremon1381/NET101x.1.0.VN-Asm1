@@ -11,7 +11,7 @@ namespace Donation.Models
     [Table("UserDonation")]
     public class UserDonation
     {
-        public string Id { get; set; } = new Guid().ToString();
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         [Required]
         [DataType(DataType.Currency)]
         public decimal Money { get; set; }
