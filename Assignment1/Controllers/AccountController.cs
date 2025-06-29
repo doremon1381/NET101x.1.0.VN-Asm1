@@ -21,7 +21,7 @@ namespace Assignment1.Controllers
     //[Authorize]
     public class AccountController : Controller
     {
-        private IIdentityServices _identityServices;
+        private readonly IIdentityServices _identityServices;
 
         public AccountController(IIdentityServices identityServices)
         {
@@ -30,11 +30,11 @@ namespace Assignment1.Controllers
 
         // GET: Account
         [Authorize(Users = Roles.ADMIN)]
-        public ActionResult Index(string phoneNumberOrEmail = "", string sortColumn = "FullName"
-            , string iconClass = "fa-sort-desc", int pageCount = 5, int pageNumber = 1)
+        public ActionResult Index(string phoneNumberOrEmail = "", string sortColumn = nameof(AccountUsersVM.FullName)
+            , string iconClass = ViewExtensions.FaSortDesc, int pageCount = 5, int pageNumber = 1)
         {
-            if (!User.IsInRole(Roles.ADMIN))
-                throw new Exception("User is not an admin!");
+            //if (!User.IsInRole(Roles.ADMIN))
+            //    throw new Exception("User is not an admin!");
 
             var users = _identityServices.SearchForUsers(phoneNumberOrEmail.Trim())
                 .Select(user => new AccountUsersVM()
@@ -52,42 +52,8 @@ namespace Assignment1.Controllers
                     Notes = user.Notes ?? ""
                 });
 
-            if (sortColumn == nameof(AccountUsersVM.FullName))
-            {
-                users = iconClass == ViewExtensions.SortDesc
-                    ? users.OrderByDescending(p => p.FullName)
-                    : users.OrderBy(p => p.FullName);
-            }
-            else if (sortColumn == nameof(AccountUsersVM.UserName))
-            {
-                users = iconClass == ViewExtensions.SortDesc
-                    ? users.OrderByDescending(p => p.UserName)
-                    : users.OrderBy(p => p.UserName);
-            }
-            else if (sortColumn == nameof(AccountUsersVM.Email))
-            {
-                users = iconClass == ViewExtensions.SortDesc
-                    ? users.OrderByDescending(p => p.Email)
-                    : users.OrderBy(p => p.Email);
-            }
-            else if (sortColumn == nameof(AccountUsersVM.PhoneNumber))
-            {
-                users = iconClass == ViewExtensions.SortDesc
-                    ? users.OrderByDescending(p => p.PhoneNumber)
-                    : users.OrderBy(p => p.PhoneNumber);
-            }
-            else if (sortColumn == nameof(AccountUsersVM.Role))
-            {
-                users = iconClass == ViewExtensions.SortDesc
-                    ? users.OrderByDescending(p => p.Role)
-                    : users.OrderBy(p => p.Role);
-            }
-            else if (sortColumn == nameof(AccountUsersVM.Active))
-            {
-                users = iconClass == ViewExtensions.SortDesc
-                    ? users.OrderByDescending(p => p.Active)
-                    : users.OrderBy(p => p.Active);
-            }
+            // Apply sorting
+            users = ApplySortingUsers(sortColumn, iconClass, users);
 
             //users = users.ToList();
 
@@ -113,6 +79,37 @@ namespace Assignment1.Controllers
             return View();
         }
 
+        private static IEnumerable<AccountUsersVM> ApplySortingUsers(string sortColumn, string iconClass, IEnumerable<AccountUsersVM> users)
+        {
+            Func<AccountUsersVM, object> sortFunc = a => a.FullName;
+            if (sortColumn == nameof(AccountUsersVM.UserName))
+            {
+                sortFunc = a => a.UserName;
+            }
+            else if (sortColumn == nameof(AccountUsersVM.Email))
+            {
+                sortFunc = a => a.Email;
+            }
+            else if (sortColumn == nameof(AccountUsersVM.PhoneNumber))
+            {
+                sortFunc = a => a.PhoneNumber;
+            }
+            else if (sortColumn == nameof(AccountUsersVM.Role))
+            {
+                sortFunc = a => a.Role;
+            }
+            else if (sortColumn == nameof(AccountUsersVM.Active))
+            {
+                sortFunc = a => a.Active;
+            }
+
+            users = iconClass == ViewExtensions.FaSortDesc
+                    ? users.OrderByDescending(sortFunc)
+                    : users.OrderBy(sortFunc);
+
+            return users;
+        }
+
         public ActionResult Login()
         {
             ViewBag.Message = "Login Page";
@@ -124,9 +121,8 @@ namespace Assignment1.Controllers
         {
             try
             {
-                var user = _identityServices.Find(loginVM.UserName, loginVM.Password);
-                if (user == null)
-                    throw new Exception("Wrong username or password");
+                var user = _identityServices.Find(loginVM.UserName, loginVM.Password)
+                    ?? throw new Exception("Wrong username or password");
 
                 // Sign in the user
                 var userIdentity = _identityServices.CreateIdentity(user);
@@ -135,14 +131,20 @@ namespace Assignment1.Controllers
                 var authenticationManager = HttpContext.GetOwinContext().Authentication;
                 authenticationManager.SignIn(userIdentity);
 
-                return RedirectToAction("Index", "Home", new { area = "" });
+                if (((ClaimsIdentity)userIdentity).Claims.Where(c => c.Type == ClaimTypes.Role).First().Value == Roles.ADMIN)
+                {
+                    // Redirect to admin page
+                    return RedirectToAction("Index", "Account", new { area = "" });
+                }
+                else
+                    return RedirectToAction("UserView", "Donation", new { area = "" });
             }
             catch (Exception ex)
             {
                 // TODO
                 ModelState.AddModelError("Error", ex);
                 ViewBag.Error = ex.Message;
-                return View("Error");
+                return View();
             }
 
         }
@@ -157,8 +159,8 @@ namespace Assignment1.Controllers
         }
 
         [HttpPost]
-        [Authorize]
-        public ActionResult Update(string firstName, string lastName, string email, string phoneNumber, string userName, string address, string idUser, string idRole, string redirectTo = "Index")
+        [Authorize(Users = Roles.ADMIN)]
+        public ActionResult Update(string firstName, string lastName, string phoneNumber, string address, string idUser, string idRole, string redirectTo = "Index")
         {
             try
             {
@@ -166,9 +168,8 @@ namespace Assignment1.Controllers
                 && !User.IsInRole(Roles.ADMIN))
                     throw new Exception("That's the wrong way to do!");
 
-                var user = _identityServices.FindUserById(idUser);
-                if (user == null)
-                    throw new Exception("User not found");
+                var user = _identityServices.FindUserById(idUser)
+                    ?? throw new Exception("User not found");
 
                 _identityServices.UpdateUserWithRole(new AppIdentityUser()
                 {
@@ -191,7 +192,7 @@ namespace Assignment1.Controllers
 
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Users = Roles.ADMIN)]
         public ActionResult Lock(string idUser)
         {
             // Only admin can lock and unlock account
@@ -210,7 +211,7 @@ namespace Assignment1.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Users = Roles.ADMIN)]
         public ActionResult Unlock(string idUser)
         {
             // Only admin can lock and unlock account
@@ -229,15 +230,18 @@ namespace Assignment1.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Users = Roles.ADMIN)]
         public ActionResult AddUser(string firstName, string lastName, string email, string phoneNumber, string address, string userName, string password, string idRole)
         {
             // Only admin can create new users
             if (!User.IsInRole(Roles.ADMIN))
                 return Redirect("Index");
 
-            if (!_identityServices.IsEmailExist(email))
+            try
             {
+                if (_identityServices.IsEmailExist(email))
+                    throw new Exception("This email is existed!");
+
                 var newUser = new AppIdentityUser()
                 {
                     FirstName = firstName,
@@ -251,18 +255,19 @@ namespace Assignment1.Controllers
                 };
 
                 var result = _identityServices.CreateUserWithRole(newUser, idRole);
+                return Redirect("Index");
             }
-            else
+            catch (Exception ex)
             {
                 // TODO: show dialog into view
-
-                return null;
+                ModelState.AddModelError("Error", ex);
+                return View("Error", ex);
             }
 
-            return Redirect("Index");
         }
 
         [Authorize]
+        [Authorize(Users = Roles.ADMIN)]
         public ActionResult Details()
         {
             try
@@ -291,6 +296,7 @@ namespace Assignment1.Controllers
         }
 
         [HttpPost]
+        [Authorize(Users = Roles.ADMIN)]
         public ActionResult Delete(string idUser)
         {
             try
@@ -318,12 +324,13 @@ namespace Assignment1.Controllers
         {
             try
             {
-                var user = _identityServices.FindUserById(idUser);
-                if (user == null)
-                {
-                    // Handle the case where the user is not found
-                    throw new Exception();
-                }
+                var user = _identityServices.FindUserById(idUser)
+                    ?? throw new Exception();
+                //if (user == null)
+                //{
+                //    // Handle the case where the user is not found
+                //    throw new Exception();
+                //}
 
                 SendEmail(note, user);
 

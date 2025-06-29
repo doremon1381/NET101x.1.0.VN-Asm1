@@ -1,5 +1,6 @@
 using Donation.IdentityService;
 using Donation.IdentityServices;
+using Donation.Services;
 using System;
 
 using Unity;
@@ -45,7 +46,10 @@ namespace Assignment1
 
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
+
+            // use HieararchicalLifetimeManager to ensure that the same instance is used within the same request
             container.RegisterType<IIdentityServices, IdentityServices>(new HierarchicalLifetimeManager());
+            container.RegisterType<IDonationServices, DonationServices>(new HierarchicalLifetimeManager());
         }
     }
 }

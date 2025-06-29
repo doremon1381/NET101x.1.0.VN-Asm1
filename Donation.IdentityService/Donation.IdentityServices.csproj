@@ -96,6 +96,10 @@
     <Compile Include="Migrations\202506271018164_addAddressToIdentityUser.Designer.cs">
       <DependentUpon>202506271018164_addAddressToIdentityUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202506282224201_updateIdentityUser.cs" />
+    <Compile Include="Migrations\202506282224201_updateIdentityUser.Designer.cs">
+      <DependentUpon>202506282224201_updateIdentityUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roles.cs" />
@@ -122,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202506271018164_addAddressToIdentityUser.resx">
       <DependentUpon>202506271018164_addAddressToIdentityUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506282224201_updateIdentityUser.resx">
+      <DependentUpon>202506282224201_updateIdentityUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

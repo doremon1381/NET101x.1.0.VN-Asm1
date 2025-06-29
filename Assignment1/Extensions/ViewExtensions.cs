@@ -7,7 +7,7 @@ namespace Assignment1.Extensions
 {
     public static class ViewExtensions
     {
-        public const string SortAsc = "fa-sort-asc";
-        public const string SortDesc = "fa-sort-desc";
+        public const string FaSortAsc = "fa-sort-asc";
+        public const string FaSortDesc = "fa-sort-desc";
     }
 }

@@ -1,4 +1,4 @@
-﻿
+﻿@model Exception
 @{ 
     Layout = null;
 }
@@ -13,6 +13,7 @@
     <hgroup>
         <h1>Error.</h1>
         <h2>An error occurred while processing your request.</h2>
+        <h2 style="color:red">@Model.Message</h2>
     </hgroup>
 </body>
 </html>

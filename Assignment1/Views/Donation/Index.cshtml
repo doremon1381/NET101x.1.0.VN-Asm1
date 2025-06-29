@@ -1,0 +1,456 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Danh sách đợt quyên góp</h1>
+    <div class="card mb-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalAdd">
+                    Thêm mới
+                </button>
+                @using (Html.BeginForm("Index", "Donation", FormMethod.Get,
+                    new { @class = "form d-flex align-items-center justify-content-center gap-2" }))
+                {
+                    @*@Html.Label("Search", new { @class = "mr-1" })*@
+                    @*@Html.TextBox("searching", ViewBag.Search as string, new { id = "searching", name = "searching", @class = "form-control", placeholder = "search" })*@
+                    <input type="text" name="searching" class="form-control" id="searching" placeholder="search" value="@(ViewBag.Search as string)"/>
+                    <button type="submit" class="btn btn-success">Search</button>
+                }
+            </div>
+            <!-- Modal Add-->
+            <div class="modal fade" id="exampleModalAdd" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabelll">Thêm mới</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            @using (Html.BeginForm("CreateDonationPlan", "Donation", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="addname"
+                                               class="col-form-label">Mã đợt quyên góp:</label>
+                                        <input type="text" class="form-control"
+                                               id="addname" name="code" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="addcost"
+                                               class="col-form-label">Tên đợt quyên góp:</label>
+                                        <input type="text" class="form-control"
+                                               id="addcost" name="title" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="addname"
+                                               class="col-form-label">Ngày bắt đầu:</label>
+                                        <input type="date" class="form-control"
+                                               id="addname" name="startDate" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="addcost"
+                                               class="col-form-label">Ngày kết thúc:</label>
+                                        <input type="date" class="form-control"
+                                               id="addcost" name="endDate" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="addname"
+                                               class="col-form-label">Tổ chức:</label>
+                                        <input type="text" class="form-control"
+                                               id="addname" name="organization" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="addcost"
+                                               class="col-form-label">Số điện thoại:</label>
+                                        <input type="number" class="form-control"
+                                               id="addcost" name="organizationPhone" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="ct_id" class="col-form-label">Nội dung:</label>
+                                        <textarea name="description" class="form-control" cols="50" rows="5">Nhập nội dung</textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                    <button type="submit" class="btn btn-primary">Thêm </button>
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Add-->
+        </div>
+
+        <div class="card-header d-flex flex-row gap-2">
+            <label for="ct_id" class="col-form-label">entries per page</label>
+            <select class="form-control col-2" name="pageCount" id="pageCountSelection" style="width:50px">
+                @foreach (var item in (SelectList)ViewBag.PageNumberSelections)
+                {
+                    <option value="@item.Value" @(item.Value == ((int)ViewBag.PageCount).ToString() ? "selected" : "")>@(item.Text)</option>
+                }
+            </select>
+            <script>
+                document.getElementById("pageCountSelection")
+                    .addEventListener("change", function () {
+                        const searchControl = document.getElementById("searching");
+                        const searchValue = searchControl.value;
+
+                        const pageCount = this.value;
+                        if (pageCount)
+                            window.location.href = `/donation/index?sortColumn=@ViewBag.SortColumn&pageCount=${pageCount}&searching=${searchValue}&iconClass=@ViewBag.IconClass`;
+                    })
+            </script>
+        </div>
+
+        <div class="card-body">
+            <table id="datatablesSimple">
+                <thead>
+                    <tr style="background-color: gray !important;">
+                        <th>
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.FaSortDesc)
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.Code))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortAsc">Mã</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.Code))
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.Code))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortDesc">Mã</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.Code))
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th>
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.FaSortDesc)
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.Title))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortAsc">Tên</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.Title))
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.Title))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortDesc">Tên</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.Title))
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th>
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.FaSortDesc)
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.StartDate))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortAsc">Ngày bắt đầu</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.StartDate))
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.StartDate))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortDesc">Ngày bắt đầu</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.StartDate))
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th>
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.FaSortDesc)
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.EndDate))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortAsc">Ngày kết thúc</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.EndDate))
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.EndDate))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortDesc">Ngày kết thúc</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.EndDate))
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th>
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.FaSortDesc)
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.OrganizationName))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortAsc">Tổ chức</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.OrganizationName))
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.OrganizationName))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortDesc">Tổ chức</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.OrganizationName))
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th>
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.FaSortDesc)
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.OrganizationPhone))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortAsc">Số điện thoại</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.OrganizationPhone))
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.OrganizationPhone))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortDesc">Số điện thoại</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.OrganizationPhone))
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th>
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.FaSortDesc)
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.TotalMoney))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortAsc">Tổng tiền</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.TotalMoney))
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.TotalMoney))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortDesc">Tổng tiền</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.TotalMoney))
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th>
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.FaSortDesc)
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.Status))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortAsc">Trạng thái</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.Status))
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/donation/index?sortColumn=@(nameof(Donation.Models.Donation.Status))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortDesc">Trạng thái</a>
+                                if (ViewBag.SortColumn == nameof(Donation.Models.Donation.Status))
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th style="width: 260px">Hành động</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var donation in (List<Donation.Models.Donation>)ViewBag.DonationPlans)
+                    {
+                        <tr>
+
+                            <td>@donation.Code</td>
+                            <td>@donation.Title</td>
+                            <td>@donation.StartDate.ToString("dd/MM/yyyy")</td>
+                            <td>@donation.EndDate.ToString("dd/MM/yyyy")</td>
+                            <td>@donation.OrganizationName</td>
+                            <td>@donation.OrganizationPhone</td>
+                            <!--TODO: will think about bring culture info to database-->
+                            <td>@(((decimal)donation.TotalMoney).ToString("C2", System.Globalization.CultureInfo.GetCultureInfo("vn-vn")))</td>
+                            <td>@donation.Status</td>
+                            <td style="display:flex; flex-wrap:wrap" class="gap-1">
+                                <button type="button" style="width: 105px" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal@(donation.Id)"
+                                        @(donation.Status == Donation.Models.DonationStatus.Closed ? "disabled" : "")>
+                                    Cập nhật
+                                </button>
+                                <a style="width: 105px" class="btn btn-warning" href="/donation/DonationDetails?id=@donation.Id">
+                                    Chi tiết
+                                </a>
+                                @if (donation.Status == Donation.Models.DonationStatus.Created)
+                                {
+                                    using (Html.BeginForm("UpdateDonationStatus", "Donation", FormMethod.Post))
+                                    {
+                                        <input type="hidden" class="form-control" id="id" name="donationId" value="@donation.Id">
+                                        <input type="hidden" class="form-control" id="id" name="donationStatus" value="@Donation.Models.DonationStatus.Open">
+                                        <button type="submit" style="width: 105px" class="btn btn-success">
+                                            Quyên góp
+                                        </button>
+                                    }
+                                }
+                                else if (donation.Status == Donation.Models.DonationStatus.Open)
+                                {
+                                    using (Html.BeginForm("UpdateDonationStatus", "Donation", FormMethod.Post))
+                                    {
+                                        <input type="hidden" class="form-control" id="id" name="donationId" value="@donation.Id">
+                                        <input type="hidden" class="form-control" id="id" name="donationStatus" value="@Donation.Models.DonationStatus.Done">
+                                        <button type="submit" style="width: 105px" class="btn btn-success">
+                                            Kết thúc
+                                        </button>
+                                    }
+                                }
+                                else if (donation.Status == Donation.Models.DonationStatus.Done)
+                                {
+                                    using (Html.BeginForm("UpdateDonationStatus", "Donation", FormMethod.Post))
+                                    {
+                                        <input type="hidden" class="form-control" id="id" name="donationId" value="@donation.Id">
+                                        <input type="hidden" class="form-control" id="id" name="donationStatus" value="@Donation.Models.DonationStatus.Closed">
+                                        <button type="submit" style="width: 105px" class="btn btn-success">
+                                            Đóng
+                                        </button>
+                                    }
+                                }
+                                @if (donation.Status == Donation.Models.DonationStatus.Created
+                                    || donation.Status == Donation.Models.DonationStatus.Closed)
+                                {
+                                    <button type="button" style="width: 105px" class="btn btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#idModelDel@(donation.Id)">
+                                        Xóa
+                                    </button>
+                                }
+
+                                <div class="modal fade" id="idModelDel@(donation.Id)" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Bạn chắc chắn muốn xóa ?</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Đợt quyên góp : <span>@donation.Title</span>
+                                                @using (Html.BeginForm("DeleteDonation", "Donation", FormMethod.Post))
+                                                {
+                                                    <div class="modal-footer" style="margin-top: 20px">
+                                                        <input type="hidden" class="form-control" id="id" name="donationId" value="@donation.Id">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">
+                                                            Close
+                                                        </button>
+                                                        <button type="submit" class="btn btn-danger">Xóa</button>
+
+                                                    </div>
+                                                }
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal fade" id="exampleModal@(donation.Id)" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg ">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabell">Cập nhật</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                @using (Html.BeginForm("UpdateDonationPlan", "Donation", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                                {
+                                                    <input type="hidden" name="id">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <input type="hidden" class="form-control"
+                                                                   id="donationId" name="donationId" value="@(donation.Id)">
+                                                            <label for="addname"
+                                                                   class="col-form-label">Mã đợt quyên góp:</label>
+                                                            <input type="text" class="form-control"
+                                                                   id="addname" name="code" required value="@donation.Code">
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label for="addcost"
+                                                                   class="col-form-label">Tên đợt quyên góp:</label>
+                                                            <input type="text" class="form-control"
+                                                                   id="addcost" name="title" required value="@donation.Title">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <label for="addname"
+                                                                   class="col-form-label">Ngày bắt đầu:</label>
+                                                            <input type="date" class="form-control"
+                                                                   id="addname" name="startDate" required value="@donation.StartDate.ToString("yyyy-MM-dd")">
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label for="addcost"
+                                                                   class="col-form-label">Ngày kết thúc:</label>
+                                                            <input type="date" class="form-control"
+                                                                   id="addcost" name="endDate" required value="@donation.EndDate.ToString("yyyy-MM-dd")">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <label for="addname"
+                                                                   class="col-form-label">Tổ chức:</label>
+                                                            <input type="text" class="form-control"
+                                                                   id="addname" name="organizationName" required value="@donation.OrganizationName">
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label for="addcost"
+                                                                   class="col-form-label">Số điện thoại:</label>
+                                                            <input type="tel" class="form-control"
+                                                                   id="addcost" name="phone" required value="@donation.OrganizationPhone">
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <label for="ct_id" class="col-form-label">Nội dung:</label>
+                                                            <textarea name="content" class="form-control" cols="50" rows="5">@(donation.Description)</textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                        <button type="submit" class="btn btn-primary">Lưu </button>
+                                                    </div>
+                                                }
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="9">
+                            <ul class="pagination justify-content-center">
+                                @for (int i = 0; i < ViewBag.TotalPages; i++)
+                                {
+                                    <li class="page-item @(ViewBag.PageNumber == i+1 ? "active" : "")">
+                                        <a class="page-link" href="/donation/index?sortColumn=@ViewBag.SortColumn&pageCount=@ViewBag.PageCount&searching=@ViewBag.Search&iconClass=@ViewBag.IconClass&pageNumber=@(i+1)">@(i+1)</a>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

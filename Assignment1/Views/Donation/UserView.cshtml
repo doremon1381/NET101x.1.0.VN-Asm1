@@ -1,0 +1,114 @@
+﻿
+@{
+    ViewBag.Title = "Danh sách quyên góp";
+}
+
+
+<div class="container">
+
+    <div class="row mb-5 justify-content-center">
+        <div class="col-md-7 text-center">
+            <h2 class="section-title mb-2">Các đợt quyên góp</h2>
+        </div>
+    </div>
+
+    <ul class="job-listings mb-5">
+        <th>
+        <li style="margin-bottom: 20px" class="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center ">
+            <div class="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
+                <div class="job-listing-position custom-width  mb-3 mb-sm-0" style="padding: 10px;width: 250px">
+                    <h2>Quyên góp mùa lũ</h2>
+                    <strong> Mới tạo </strong>
+                </div>
+                <div class="job-listing-location mb-3 mb-sm-0 custom-width w-10" style="padding: 10px;">
+                    Ngày bắt đầu<br>
+                    <strong th:text="${category.startDate}"></strong><br>
+                </div>
+                <div class="job-listing-location mb-3 mb-sm-0 custom-width w-10" style="padding: 10px;">
+                    Ngày kết thúc<br>
+                    <strong th:text="${category.endDate}"></strong><br>
+                </div>
+                <div class="job-listing-location mb-3 mb-sm-0 custom-width w-25" style="padding: 10px;">
+                    <span class="icon-room"></span> <span th:text="${category.organizationName}"></span><br>
+                    <strong th:text="${category.phoneNumber}"></strong><br>
+                </div>
+                <div class="job-listing-meta custom-width w-20">
+                    <p style="margin-top: 20px" class="btn btn-primary py-2" data-toggle="modal">Quyên góp</p>
+                    <p style="margin-top: 20px;background-color: white !important;" class="btn py-2"><span style="color: white">Quyên góp</span></p>
+                </div>
+            </div>
+
+        </li>
+        <!-- Modal -->
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Quyên góp: <span></span></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post">
+                        <div class="modal-body">
+                            <div class="row">
+
+                                <div class="col-12">
+                                    <label for="addname"
+                                           class="col-form-label">Họ tên:</label>
+                                    <input type="text" class="form-control"
+                                           id="addname" name="name" placeholder="" required>
+                                    <label for="addname"
+                                           class="col-form-label">Số tiền quyên góp:</label>
+                                    <input type="number" class="form-control" placeholder=""
+                                           id="addname" name="money" required>
+                                    <input type="hidden" class="form-control" placeholder=""
+                                           id="addname" name="idUser">
+                                    <input type="hidden" class="form-control" placeholder=""
+                                           id="addname" name="idDonation" required>
+
+                                    <label for="addname"
+                                           class="col-form-label">Lời nhắn:</label>
+                                    <textarea rows="10" cols="3" class="form-control" name="text">
+
+                                         </textarea>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                <button type="submit" data-toggle="modal" data-target="#exampleModal" class="btn btn-primary">Quyên góp</button>
+                            </div>
+                        </div>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+        </th>
+        @*<script>
+             function detail(id){
+                 window.location = '/donation/detail/' + id;
+             }
+
+
+        </script>*@
+    </ul>
+
+    <div class="row pagination-wrap">
+        <div class="col-md-6 text-center text-md-left mb-4 mb-md-0">
+
+        </div>
+        <div class="col-md-6 text-center text-md-right">
+            <div class="custom-pagination ml-auto">
+                <a class="prev">Prev</a>
+                <div class="d-inline-block">
+                </div>
+
+                <a class="next">Next</a>
+            </div>
+        </div>
+    </div>
+
+</div>

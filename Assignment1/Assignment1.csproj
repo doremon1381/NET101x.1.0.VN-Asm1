@@ -202,6 +202,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DonationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -213,6 +214,8 @@
     <Compile Include="ViewModel\AccountLoginVM.cs" />
     <Compile Include="ViewModel\AccountRoleVM.cs" />
     <Compile Include="ViewModel\AccountUsersVM.cs" />
+    <Compile Include="ViewModel\DonationVM.cs" />
+    <Compile Include="ViewModel\UserDonationVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -542,8 +545,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
@@ -558,6 +559,9 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Account\Details.cshtml" />
+    <Content Include="Views\Donation\Index.cshtml" />
+    <Content Include="Views\Donation\DonationDetails.cshtml" />
+    <Content Include="Views\Donation\UserView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -596,6 +600,14 @@
     <ProjectReference Include="..\Donation.IdentityService\Donation.IdentityServices.csproj">
       <Project>{dee1d4d7-fe8c-4f2e-b55e-f417eb0feffb}</Project>
       <Name>Donation.IdentityServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Donation.Models\Donation.Models.csproj">
+      <Project>{0aac5aa7-6456-4cf8-9a26-7c4058a11d50}</Project>
+      <Name>Donation.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Donation.Services\Donation.Services.csproj">
+      <Project>{990fde14-8cbb-40c5-90cd-fea114be15c2}</Project>
+      <Name>Donation.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

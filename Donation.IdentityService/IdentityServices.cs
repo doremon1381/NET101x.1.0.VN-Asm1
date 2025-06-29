@@ -115,6 +115,11 @@ namespace Donation.IdentityService
             return _identityDbContext.Users.Find(userId);
         }
 
+        public List<AppIdentityUser> GetAllUsers()
+        {
+            return _identityDbContext.Users.ToList();
+        }
+
         public List<IdentityRole> GetRoles()
         {
             return _roleManager.Value.Roles.ToList();
@@ -221,7 +226,9 @@ namespace Donation.IdentityService
         AppIdentityUser FindUserById(string userId);
         List<AppIdentityUser> SearchForUsers(string usernameOrEmail);
         IdentityRole FindRole(string id);
-
+        /// <summary>
+        /// TODO: for seed data
+        /// </summary>
         void AddTenUsers();
         List<IdentityRole> GetRoles();
         bool UpdateUserWithRole(AppIdentityUser appIdentityUser, string idRole);
@@ -230,5 +237,6 @@ namespace Donation.IdentityService
         bool IsEmailExist(string email);
         IdentityRole GetUserRole(string userId);
         bool DeleteUser(string id);
+        List<AppIdentityUser> GetAllUsers();
     }
 }

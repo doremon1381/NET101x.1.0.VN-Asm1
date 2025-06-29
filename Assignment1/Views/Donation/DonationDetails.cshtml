@@ -1,0 +1,275 @@
+﻿@model Donation.Models.Donation
+@{
+    ViewBag.Title = "DonationDetails";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Chi tiết đợt quyên góp</h1>
+    <div class="card mb-4">
+
+        <div class="card-body">
+            <!--Detail-->
+            <div class="row">
+                <div class="col-6">
+                    <label for="addname"
+                           class="col-form-label">Mã đợt quyên góp:</label>
+                    <input type="text" class="form-control"
+                           id="addname" name="code" value="@Model.Code" readonly="readonly">
+                </div>
+                <div class="col-6">
+                    <label for="addcost"
+                           class="col-form-label">Tên đợt quyên góp:</label>
+                    <input type="text" class="form-control"
+                           id="addcost" name="title" value="@Model.Title" readonly="readonly">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label for="addname"
+                           class="col-form-label">Ngày bắt đầu:</label>
+                    <input type="date" class="form-control"
+                           id="addname" name="startDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" readonly="readonly">
+                </div>
+                <div class="col-6">
+                    <label for="addcost"
+                           class="col-form-label">Ngày kết thúc:</label>
+                    <input type="date" class="form-control"
+                           id="addcost" name="endDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" readonly="readonly">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label for="addname"
+                           class="col-form-label">Tổng tiền quyên góp:</label>
+                    <input type="text" class="form-control"
+                           id="addname" name="totalMoney" value="@(Model.TotalMoney.ToString("C2", System.Globalization.CultureInfo.GetCultureInfo("vn-vn")))" readonly="readonly">
+                </div>
+                <div class="col-6">
+                    <label for="addcost"
+                           class="col-form-label">Trạng thái:</label>
+                    @if (Model.Status == Donation.Models.DonationStatus.Created)
+                    {
+                        <input type="text" class="form-control"
+                               id="addcost" name="end" value="Mới tạo" readonly="readonly">
+                    }
+                    else if (Model.Status == Donation.Models.DonationStatus.Open)
+                    {
+                        <input type="text" class="form-control"
+                               id="addcost" name="end" value="Đang quyên góp" readonly="readonly">
+                    }
+                    else if (Model.Status == Donation.Models.DonationStatus.Done)
+                    {
+                        <input type="text" class="form-control"
+                               id="addcost" name="end" value="Kết thúc quyên góp" readonly="readonly">
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control"
+                               id="addcost" name="end" value="Đóng quyên góp" readonly="readonly">
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label for="addname"
+                           class="col-form-label">Tổ chức:</label>
+                    <input type="text" class="form-control"
+                           id="addname" name="organization" value="@Model.OrganizationName" readonly="readonly">
+                </div>
+                <div class="col-6">
+                    <label for="addcost"
+                           class="col-form-label">Số điện thoại:</label>
+                    <input type="tel" class="form-control"
+                           id="addcost" name="organizationPhone" value="@Model.OrganizationPhone" readonly="readonly">
+                </div>
+                <div class="col-12">
+                    <label for="ct_id" class="col-form-label">Nội dung:</label>
+                    <textarea name="description" class="form-control" cols="50" readonly="readonly">@Model.Description</textarea>
+                </div>
+            </div>
+
+            <!--Detail-->
+            <h3 class="mt-4">Danh sách những người quyên góp</h3>
+            <div class="d-flex justify-content-between">
+                <div class="card-header d-flex flex-row gap-2">
+                    <label for="ct_id" class="col-form-label">entries per page</label>
+                    <select class="form-control col-2" name="pageCount" id="pageCountSelection" style="width:50px">
+                        @foreach (var item in (SelectList)ViewBag.PageNumberSelections)
+                        {
+                            <option value="@item.Value" @(item.Value == ((int)ViewBag.PageCount).ToString() ? "selected" : "")>@(item.Text)</option>
+                        }
+                    </select>
+                    <script>
+                    document.getElementById("pageCountSelection")
+                        .addEventListener("change", function () {
+                            const searchControl = document.getElementById("searching");
+                            const searchValue = searchControl.value;
+                            const pageCount = this.value;
+                            if (pageCount)
+                                window.location.href = `/donation/donationDetails?id=@Model.Id&sortColumn=@ViewBag.SortColumn&pageCount=${pageCount}&searching=${searchValue}&iconClass=@ViewBag.IconClass`;
+                        })
+                    </script>
+                </div>
+                @using (Html.BeginForm("donationDetails", "Donation", FormMethod.Get,
+                    new { @class = "form d-flex align-items-center justify-content-center gap-2" }))
+                {
+                    @*@Html.Label("Search", new { @class = "mr-1" })*@
+                    @*@Html.TextBox("searching", ViewBag.Search as string, new { id = "searching", name = "searching", @class = "form-control", placeholder = "search" })*@
+                    <input type="text" name="searching" class="form-control" id="searching" placeholder="any columns" value="@(ViewBag.Search as string)" />
+                    <button type="submit" class="btn btn-success">Search</button>
+                }
+            </div>
+            <table id="datatablesSimple">
+                <thead>
+                    <tr style="background-color: gray !important;">
+                        <th>
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.FaSortDesc)
+                            {
+                                <a href="/donation/donationDetails?id=@Model.Id&sortColumn=@(nameof(Assignment1.ViewModel.UserDonationVM.UserFullName))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortAsc">Họ và tên</a>
+                                if (ViewBag.SortColumn == nameof(Assignment1.ViewModel.UserDonationVM.UserFullName))
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/donation/donationDetails?id=@Model.Id&sortColumn=@(nameof(Assignment1.ViewModel.UserDonationVM.UserFullName))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortDesc">Họ và tên</a>
+                                if (ViewBag.SortColumn == nameof(Assignment1.ViewModel.UserDonationVM.UserFullName))
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th>
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.FaSortDesc)
+                            {
+                                <a href="/donation/donationDetails?id=@Model.Id&sortColumn=@(nameof(Assignment1.ViewModel.UserDonationVM.Money))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortAsc">Tiền quyên góp</a>
+                                if (ViewBag.SortColumn == nameof(Assignment1.ViewModel.UserDonationVM.Money))
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/donation/donationDetails?id=@Model.Id&sortColumn=@(nameof(Assignment1.ViewModel.UserDonationVM.Money))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortDesc">Tiền quyên góp</a>
+                                if (ViewBag.SortColumn == nameof(Assignment1.ViewModel.UserDonationVM.Money))
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th>
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.FaSortDesc)
+                            {
+                                <a href="/donation/donationDetails?id=@Model.Id&sortColumn=@(nameof(Assignment1.ViewModel.UserDonationVM.CreatedAt))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortAsc">Ngày quyên góp</a>
+                                if (ViewBag.SortColumn == nameof(Assignment1.ViewModel.UserDonationVM.CreatedAt))
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/donation/donationDetails?id=@Model.Id&sortColumn=@(nameof(Assignment1.ViewModel.UserDonationVM.CreatedAt))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortDesc">Ngày quyên góp</a>
+                                if (ViewBag.SortColumn == nameof(Assignment1.ViewModel.UserDonationVM.CreatedAt))
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th>
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.FaSortDesc)
+                            {
+                                <a href="/donation/donationDetails?id=@Model.Id&sortColumn=@(nameof(Assignment1.ViewModel.UserDonationVM.Note))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortAsc">Nội dung</a>
+                                if (ViewBag.SortColumn == nameof(Assignment1.ViewModel.UserDonationVM.Note))
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/donation/donationDetails?id=@Model.Id&sortColumn=@(nameof(Assignment1.ViewModel.UserDonationVM.Note))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortDesc">Nội dung</a>
+                                if (ViewBag.SortColumn == nameof(Assignment1.ViewModel.UserDonationVM.Note))
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th>
+                            @if (ViewBag.IconClass == Assignment1.Extensions.ViewExtensions.FaSortDesc)
+                            {
+                                <a href="/donation/donationDetails?id=@Model.Id&sortColumn=@(nameof(Assignment1.ViewModel.UserDonationVM.Status))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortAsc">Trạng thái</a>
+                                if (ViewBag.SortColumn == nameof(Assignment1.ViewModel.UserDonationVM.Status))
+                                {
+                                    <i class="fa @ViewBag.IconClass"></i>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/donation/donationDetails?id=@Model.Id&sortColumn=@(nameof(Assignment1.ViewModel.UserDonationVM.Status))&pageCount=@ViewBag.PageCount&iconClass=@Assignment1.Extensions.ViewExtensions.FaSortDesc">Trạng thái</a>
+                                if (ViewBag.SortColumn == nameof(Assignment1.ViewModel.UserDonationVM.Status))
+                                {
+                                    <i class="fa @ViewBag.IconClass" style="color:red"></i>
+                                }
+                            }
+                        </th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var userDonation in (List<Assignment1.ViewModel.UserDonationVM>)ViewBag.UserDonations)
+                    {
+                        <tr>
+                            <td>@userDonation.UserFullName</td>
+                            <td>@userDonation.Money.ToString("C2", System.Globalization.CultureInfo.GetCultureInfo("vn-vn"))</td>
+                            <td>@userDonation.CreatedAt.ToString("dd/MM/yyyy")</td>
+                            <td>@userDonation.Note</td>
+                            <td>@userDonation.Status</td>
+                            @if (userDonation.Status == Donation.Models.UserDonationStatus.Created)
+                            {
+                                <td style="display: flex;justify-content: space-between" class="gap-1">
+                                    @using (Html.BeginForm("SetUserDonationStatus", "donation", FormMethod.Post))
+                                    {
+                                        <input type="hidden" name="id" value="@userDonation.Id" />
+                                        <input type="hidden" name="donationId" value="@Model.Id" />
+                                        <input type="hidden" name="status" value="@Donation.Models.UserDonationStatus.Approved" />
+                                        <button type="submit" style="width: 105px" class="btn btn-success">
+                                            Xác nhận
+                                        </button>
+                                    }
+                                    @using (Html.BeginForm("SetUserDonationStatus", "donation", FormMethod.Post))
+                                    {
+                                        <input type="hidden" name="id" value="@userDonation.Id" />
+                                        <input type="hidden" name="donationId" value="@Model.Id" />
+                                        <input type="hidden" name="status" value="@Donation.Models.UserDonationStatus.Rejected" />
+                                        <button type="submit" style="width: 105px" class="btn btn-warning">
+                                            Hủy
+                                        </button>
+                                    }
+                                </td>
+                            }
+                            else
+                            {
+                                if (userDonation.Status == Donation.Models.UserDonationStatus.Approved)
+                                {
+                                    <td>
+                                        <span class="badge bg-secondary">Đã xác nhận</span>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <span class="badge bg-warning">Bị từ chối</span>
+                                    </td>
+                                }
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

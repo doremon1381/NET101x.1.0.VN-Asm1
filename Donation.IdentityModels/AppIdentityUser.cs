@@ -23,5 +23,6 @@ namespace Donation.IdentityModels
         public string Address { get; set; }
         [Required]
         public bool Active { get; set; }
+        public DateTime CreateAt { get; set; } = DateTime.Now;
     }
 }
