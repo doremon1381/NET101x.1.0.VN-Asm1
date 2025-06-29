@@ -1,8 +1,11 @@
 ﻿using Assignment1.Extensions;
+using Assignment1.Validation;
 using Assignment1.ViewModel;
 using Donation.IdentityModels;
 using Donation.IdentityService;
 using Donation.IdentityServices;
+using Donation.Models;
+using Donation.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MimeKit;
@@ -22,14 +25,16 @@ namespace Assignment1.Controllers
     public class AccountController : Controller
     {
         private readonly IIdentityServices _identityServices;
+        private readonly IDonationServices _donationServices;
 
-        public AccountController(IIdentityServices identityServices)
+        public AccountController(IIdentityServices identityServices, IDonationServices donationServices)
         {
             _identityServices = identityServices;
+            _donationServices = donationServices;
         }
 
         // GET: Account
-        [Authorize(Users = Roles.ADMIN)]
+        [AdminOnlyValidation]
         public ActionResult Index(string phoneNumberOrEmail = "", string sortColumn = nameof(AccountUsersVM.FullName)
             , string iconClass = ViewExtensions.FaSortDesc, int pageCount = 5, int pageNumber = 1)
         {
@@ -127,6 +132,7 @@ namespace Assignment1.Controllers
                 // Sign in the user
                 var userIdentity = _identityServices.CreateIdentity(user);
                 userIdentity.AddClaim(new System.Security.Claims.Claim(ClaimTypes.Sid, user.Id));
+                userIdentity.AddClaim(new System.Security.Claims.Claim("IsActive", user.Active.ToString()));
 
                 var authenticationManager = HttpContext.GetOwinContext().Authentication;
                 authenticationManager.SignIn(userIdentity);
@@ -159,46 +165,48 @@ namespace Assignment1.Controllers
         }
 
         [HttpPost]
-        [Authorize(Users = Roles.ADMIN)]
+        [Authorize]
+        [AdminOnlyValidation]
         public ActionResult Update(string firstName, string lastName, string phoneNumber, string address, string idUser, string idRole, string redirectTo = "Index")
         {
-            try
+            if (((ClaimsIdentity)User.Identity).FindFirst(c => c.Type == ClaimTypes.Sid).Value != idUser
+            && !User.IsInRole(Roles.ADMIN))
+                throw new Exception("That's the wrong way to do!");
+
+            var user = _identityServices.FindUserById(idUser)
+                ?? throw new Exception("User not found");
+
+            _identityServices.UpdateUserWithRole(new AppIdentityUser()
             {
-                if (((ClaimsIdentity)User.Identity).FindFirst(c => c.Type == ClaimTypes.Sid).Value != idUser
-                && !User.IsInRole(Roles.ADMIN))
-                    throw new Exception("That's the wrong way to do!");
+                Id = idUser,
+                FirstName = firstName,
+                LastName = lastName,
+                PhoneNumber = phoneNumber,
+                Address = address,
+                Active = user.Active
+            }, idRole);
 
-                var user = _identityServices.FindUserById(idUser)
-                    ?? throw new Exception("User not found");
-
-                _identityServices.UpdateUserWithRole(new AppIdentityUser()
-                {
-                    Id = idUser,
-                    FirstName = firstName,
-                    LastName = lastName,
-                    PhoneNumber = phoneNumber,
-                    Address = address,
-                    Active = user.Active
-                }, idRole);
-
-                return Redirect(redirectTo);
-            }
-            catch (Exception)
+            // I intent to separate the user profile from the identity user
+            // identity will be used for authentication and authorization
+            _donationServices.UpdateUserProfile(new UserProfile()
             {
-                // TODO:
-                return View("Error");
-            }
+                UserId = idUser,
+                FullName = $"{firstName} {lastName}",
+                Email = user.Email,
+                PhoneNumber = phoneNumber,
+                Address = address
+            });
+
+            return Redirect(redirectTo);
         }
 
 
         [HttpPost]
-        [Authorize(Users = Roles.ADMIN)]
+        [Authorize]
+        [AdminOnlyValidation]
         public ActionResult Lock(string idUser)
         {
             // Only admin can lock and unlock account
-            if (!User.IsInRole(Roles.ADMIN))
-                return View("Error");
-
             var user = _identityServices.FindUserById(idUser);
 
             if (user != null)
@@ -208,16 +216,15 @@ namespace Assignment1.Controllers
             }
 
             return Redirect("Index");
+
         }
 
         [HttpPost]
-        [Authorize(Users = Roles.ADMIN)]
+        [Authorize]
+        [AdminOnlyValidation]
         public ActionResult Unlock(string idUser)
         {
             // Only admin can lock and unlock account
-            if (!User.IsInRole(Roles.ADMIN))
-                return View("Error");
-
             var user = _identityServices.FindUserById(idUser);
 
             if (user != null)
@@ -230,117 +237,94 @@ namespace Assignment1.Controllers
         }
 
         [HttpPost]
-        [Authorize(Users = Roles.ADMIN)]
+        [Authorize]
+        [AdminOnlyValidation]
         public ActionResult AddUser(string firstName, string lastName, string email, string phoneNumber, string address, string userName, string password, string idRole)
         {
             // Only admin can create new users
-            if (!User.IsInRole(Roles.ADMIN))
-                return Redirect("Index");
+            if (_identityServices.IsEmailExist(email))
+                throw new Exception("This email is existed!");
+            if (_identityServices.IsUserNameExist(userName))
+                throw new Exception("Username has been used!");
 
-            try
+            // create for identity server
+            var newUser = new AppIdentityUser()
             {
-                if (_identityServices.IsEmailExist(email))
-                    throw new Exception("This email is existed!");
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                PhoneNumber = phoneNumber,
+                Address = address,
+                UserName = userName,
+                PasswordHash = Crypto.HashPassword(password),
+                Active = true
+            };
 
-                var newUser = new AppIdentityUser()
-                {
-                    FirstName = firstName,
-                    LastName = lastName,
-                    Email = email,
-                    PhoneNumber = phoneNumber,
-                    Address = address,
-                    UserName = userName,
-                    PasswordHash = Crypto.HashPassword(password),
-                    Active = true
-                };
+            var result = _identityServices.CreateUserWithRole(newUser, idRole);
 
-                var result = _identityServices.CreateUserWithRole(newUser, idRole);
-                return Redirect("Index");
-            }
-            catch (Exception ex)
+            // create user profile
+            var userProfile = _donationServices.CreateUserProfile(new UserProfile()
             {
-                // TODO: show dialog into view
-                ModelState.AddModelError("Error", ex);
-                return View("Error", ex);
-            }
+                UserId = newUser.Id,
+                FullName = $"{firstName} {lastName}",
+                Email = email,
+                PhoneNumber = phoneNumber,
+                Address = address
+            });
 
+            return Redirect("Index");
         }
 
         [Authorize]
-        [Authorize(Users = Roles.ADMIN)]
         public ActionResult Details()
         {
-            try
+            // This action can be used to show details of a specific user.
+            var user = _identityServices.FindUserById(User.Identity.GetUserId());
+            if (user == null)
             {
-                // This action can be used to show details of a specific user.
-                var user = _identityServices.FindUserById(User.Identity.GetUserId());
-                if (user == null)
-                {
-                    // Handle the case where the user is not found
-                    return HttpNotFound("User not found");
-                }
-
-                var userRole = _identityServices.GetUserRole(user.Id).Name;
-                //var userRole = 
-
-                ViewBag.Roles = new SelectList(_identityServices.GetRoles(), "Id", "Name");
-                ViewBag.UserRole = userRole;
-
-                return View(user);
+                // Handle the case where the user is not found
+                return HttpNotFound("User not found");
             }
-            catch (Exception)
-            {
-                // TODO: 
-                return View("Error");
-            }
+
+            var userRole = _identityServices.GetUserRole(user.Id).Name;
+            //var userRole = 
+
+            ViewBag.Roles = new SelectList(_identityServices.GetRoles(), "Id", "Name");
+            ViewBag.UserRole = userRole;
+
+            return View(user);
         }
 
         [HttpPost]
-        [Authorize(Users = Roles.ADMIN)]
+        [Authorize]
+        [AdminOnlyValidation]
         public ActionResult Delete(string idUser)
         {
-            try
-            {
-                // Only admin can create new users
-                if (!User.IsInRole(Roles.ADMIN))
-                    throw new Exception();
+            // Only admin can create new users
+            _identityServices.DeleteUser(idUser);
+            _donationServices.SoftDeleteUserProfile(idUser);
 
-                _identityServices.DeleteUser(idUser);
+            if (idUser.Equals(User.Identity.GetUserId()))
+                return RedirectToAction("Logout");
 
-                if (idUser.Equals(User.Identity.GetUserId()))
-                    return RedirectToAction("Logout");
-
-                return Redirect("Index");
-            }
-            catch (Exception)
-            {
-                return View("Error");
-            }
+            return Redirect("Index");
         }
 
         [HttpPost]
         [Authorize]
         public ActionResult SendMail(string note, string idUser)
         {
-            try
-            {
-                var user = _identityServices.FindUserById(idUser)
-                    ?? throw new Exception();
-                //if (user == null)
-                //{
-                //    // Handle the case where the user is not found
-                //    throw new Exception();
-                //}
+            var user = _identityServices.FindUserById(idUser)
+                ?? throw new Exception();
+            //if (user == null)
+            //{
+            //    // Handle the case where the user is not found
+            //    throw new Exception();
+            //}
 
-                SendEmail(note, user);
+            SendEmail(note, user);
 
-                return Redirect("Index");
-            }
-            catch (Exception)
-            {
-                return View("Error");
-            }
-
+            return Redirect("Index");
         }
 
         private static void SendEmail(string note, AppIdentityUser user)

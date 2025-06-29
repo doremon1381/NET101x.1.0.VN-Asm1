@@ -1,9 +1,11 @@
 ﻿using Assignment1.Extensions;
+using Assignment1.Validation;
 using Assignment1.ViewModel;
 using Donation.IdentityService;
 using Donation.IdentityServices;
 using Donation.Models;
 using Donation.Services;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -28,7 +30,8 @@ namespace Assignment1.Controllers
         }
 
         // GET: Donation
-        [Authorize(Users = Donation.IdentityServices.Roles.ADMIN)]
+        [Authorize]
+        [AdminOnlyValidation]
         public ActionResult Index(string searching = "", string sortColumn = nameof(Donation.Models.Donation.Code)
                 , string iconClass = ViewExtensions.FaSortDesc, int pageCount = 5, int pageNumber = 1)
         {
@@ -55,7 +58,8 @@ namespace Assignment1.Controllers
                 donationPlans = donationPlans.Where(d => d.Status.ToString().ToLower().Contains(searching.ToLower())
                 || d.OrganizationPhone.ToLower().Contains(searching.ToLower())
                 || d.OrganizationName.ToLower().Contains(searching.ToLower())
-                || d.Code.ToLower().Contains(searching.ToLower()));
+                || d.Code.ToLower().Contains(searching.ToLower())
+                || d.Title.ToLower().Contains(searching.ToLower()));
 
                 pageNumber = pageNumber == 0 ? 0 : pageNumber - 1;
                 ViewBag.TotalPages = (int)Math.Ceiling((double)donationPlans.Count() / pageCount);
@@ -97,7 +101,8 @@ namespace Assignment1.Controllers
         }
 
         [HttpPost]
-        [Authorize(Users = Donation.IdentityServices.Roles.ADMIN)]
+        [Authorize]
+        [AdminOnlyValidation]
         public ActionResult CreateDonationPlan(string code, string title, DateTime startDate, DateTime endDate, string organization, string organizationPhone, string desciption)
         {
             var donation = new Donation.Models.Donation()
@@ -118,7 +123,8 @@ namespace Assignment1.Controllers
         }
 
         [HttpPost]
-        [Authorize(Users = Donation.IdentityServices.Roles.ADMIN)]
+        [Authorize]
+        [AdminOnlyValidation]
         public ActionResult UpdateDonationPlan(string donationId, string code, string title, DateTime startDate, DateTime endDate, string organizationName, string phone, string content)
         {
             var donation = new Donation.Models.Donation
@@ -140,7 +146,8 @@ namespace Assignment1.Controllers
         }
 
         [HttpPost]
-        [Authorize(Users = Donation.IdentityServices.Roles.ADMIN)]
+        [Authorize]
+        [AdminOnlyValidation]
         public ActionResult UpdateDonationStatus(string donationId, string donationStatus)
         {
             var result = _donationServices.UpdateDonationStatus(donationId, donationStatus);
@@ -149,23 +156,17 @@ namespace Assignment1.Controllers
         }
 
         [HttpPost]
-        [Authorize(Users = Donation.IdentityServices.Roles.ADMIN)]
+        [Authorize]
+        [AdminOnlyValidation]
         public ActionResult DeleteDonation(string donationId)
         {
-            try
-            {
-                var donation = _donationServices.SoftDelete(donationId);
+            var donation = _donationServices.SoftDelete(donationId);
 
-                return RedirectToAction("Index");
-            }
-            catch (Exception)
-            {
-                return View("Error");
-            }
+            return RedirectToAction("Index");
         }
 
-        [Authorize(Users = Donation.IdentityServices.Roles.ADMIN)]
-        [Authorize(Users = Donation.IdentityServices.Roles.ADMIN)]
+        [Authorize]
+        [AdminOnlyValidation]
         public ActionResult DonationDetails(string id, string searching = "", string sortColumn = nameof(UserDonationVM.UserFullName)
             , string iconClass = ViewExtensions.FaSortDesc, int pageCount = 5, int pageNumber = 1)
         {
@@ -188,6 +189,7 @@ namespace Assignment1.Controllers
             ViewBag.PageNumber = pageNumber;
             ViewBag.PageCount = pageCount;
             ViewBag.IconClass = iconClass;
+            ViewBag.SortColumn = sortColumn;
             ViewBag.PageNumberSelections = new SelectList(new List<SelectListItem>()
                 {
                     new SelectListItem() { Text = "5", Value = "5" },
@@ -246,19 +248,68 @@ namespace Assignment1.Controllers
         }
 
         [HttpPost]
-        [Authorize(Users = Donation.IdentityServices.Roles.ADMIN)]
+        [Authorize]
+        [AdminOnlyValidation]
         public ActionResult SetUserDonationStatus(string id, string donationId, string status)
         {
             var userDonation = _donationServices.UpdateUserDonation(id, status);
 
             return Redirect($"donationDetails?id={donationId}");
+
         }
 
         #region user
         [Authorize]
-        public ActionResult UserView()
+        public ActionResult UserView(string direction, int pageNumber = 0)
         {
+            var donations = _donationServices.GetDonationPlans();
+
+            int pageCount = 5;
+            int lastPage = (int)Math.Ceiling((double)donations.Count() / pageCount);
+
+            if (direction == "prev")
+                pageNumber = pageNumber <= 0 ? 0 : pageNumber - 1;
+            else if (direction == "next")
+                pageNumber = pageNumber > lastPage - 1 ? lastPage - 1 : pageNumber + 1;
+
+            donations = donations.Skip(pageNumber * pageCount).Take(pageCount);
+
+            ViewBag.DonationPlans = donations.ToList();
+            ViewBag.LastPage = lastPage;
+            ViewBag.PageNumber = pageNumber;
+
             return View();
+        }
+
+        [Authorize]
+        public ActionResult UserDonationDetails(string donationId)
+        {
+            var userDonations = _donationServices.FindUserDonationByDonationId(donationId)
+                .Select(u => new UserDonationVM 
+                {
+                    Id = u.Id,
+                    Money = u.Money,
+                    Note = u.Note,
+                    CreatedAt = u.CreatedAt,
+                    Status = u.Status,
+                    UserFullName = u.UserId != null ? _identityServices.FindUserById(u.UserId)?.FullName : "Unknown User"
+                });
+            var donationPlan = _donationServices.FindById(donationId);
+
+            ViewBag.UserDonations = userDonations.ToList();
+            ViewBag.Donation = donationPlan;
+
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult CreateNewUserDonation(string currentPath, string idDonation, string name, decimal money, string note)
+        {
+            var user = User;
+            //var userProfile = _donationServices.FindUserProfleById()
+
+            return Redirect(currentPath);
         }
         #endregion
     }

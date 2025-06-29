@@ -100,6 +100,14 @@
     <Compile Include="Migrations\202506282224201_updateIdentityUser.Designer.cs">
       <DependentUpon>202506282224201_updateIdentityUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202506290834565_addIsDeletedPropertyToIdentity.cs" />
+    <Compile Include="Migrations\202506290834565_addIsDeletedPropertyToIdentity.Designer.cs">
+      <DependentUpon>202506290834565_addIsDeletedPropertyToIdentity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202506290946009_removeIsDeleteFromIdentity.cs" />
+    <Compile Include="Migrations\202506290946009_removeIsDeleteFromIdentity.Designer.cs">
+      <DependentUpon>202506290946009_removeIsDeleteFromIdentity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roles.cs" />
@@ -129,6 +137,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202506282224201_updateIdentityUser.resx">
       <DependentUpon>202506282224201_updateIdentityUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506290834565_addIsDeletedPropertyToIdentity.resx">
+      <DependentUpon>202506290834565_addIsDeletedPropertyToIdentity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506290946009_removeIsDeleteFromIdentity.resx">
+      <DependentUpon>202506290946009_removeIsDeleteFromIdentity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -25,6 +25,19 @@ namespace Donation.Services
         // You can also override OnModelCreating method to configure your model
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            // TODO
+            //modelBuilder.Entity<Models.UserDonation>()
+            //    .HasOptional(c => c.UserProfile)
+            //    .WithMany(p => p.UserDonations)
+            //    .HasForeignKey(c => c.UserId)
+            //    .WillCascadeOnDelete(false);
+
+            //modelBuilder.Entity<Models.UserDonation>()
+            //    .HasOptional(c => c.Donation)
+            //    .WithMany(p => p.UserDonations)
+            //    .HasForeignKey(c => c.DonationId)
+            //    .WillCascadeOnDelete(false);
+
             base.OnModelCreating(modelBuilder);
             // Add custom configurations here if needed
         }

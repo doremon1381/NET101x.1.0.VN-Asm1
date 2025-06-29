@@ -268,7 +268,7 @@
                                     <p style="color: red;font-weight: bold">Đã khóa</p>
                                 }
                             </td>
-                            <td style="width : 270px">
+                            <td style="width : 270px; flex-wrap:wrap" class="d-flex gap-1">
                                 <button type="button" style="width: 80px" class="btn btn-success" data-bs-toggle="modal"
                                         data-bs-target="#idModelMail@(user.UserId)">
                                     Gửi
@@ -285,13 +285,13 @@
                                                 data-bs-target="#exampleModal@(user.UserId)">
                                             Sửa
                                         </button>
-                                        <button type="button" style="width: 80px" class="btn btn-danger mt-1" data-bs-toggle="modal"
+                                        <button type="button" style="width: 80px" class="btn btn-danger" data-bs-toggle="modal"
                                                 data-bs-target="#idModelDel@(user.UserId)">
                                             Xóa
                                         </button>
                                         if (user.Active)
                                         {
-                                            using (Html.BeginForm("Lock", "Account", FormMethod.Post, new { style = "margin-left: 85px;margin-top: -38px" }))
+                                            using (Html.BeginForm("Lock", "Account", FormMethod.Post, new { style = "" }))
                                             {
                                                 <input type="hidden" class="form-control" id="id" name="idUser" value="@user.UserId">
                                                 <button type="submit" style="width: 80px" class="btn btn-danger">
@@ -301,7 +301,7 @@
                                         }
                                         else
                                         {
-                                            using (Html.BeginForm("UnLock", "Account", FormMethod.Post, new { style = "margin-left: 85px;margin-top: -38px" }))
+                                            using (Html.BeginForm("UnLock", "Account", FormMethod.Post, new { style = "" }))
                                             {
                                                 <input type="hidden" class="form-control" id="id" name="idUser" value="@user.UserId">
                                                 <button type="submit" style="width: 80px" class="btn btn-success">
@@ -316,13 +316,13 @@
                                                 data-bs-target="#exampleModal@(user.UserId)">
                                             Sửa
                                         </button>
-                                        <button type="button" style="width: 80px" class="btn btn-danger mt-1" data-bs-toggle="modal" disabled
+                                        <button type="button" style="width: 80px" class="btn btn-danger" data-bs-toggle="modal" disabled
                                                 data-bs-target="#idModelDel@(user.UserId)">
                                             Xóa
                                         </button>
                                         if (user.Active)
                                         {
-                                            using (Html.BeginForm("Lock", "Account", FormMethod.Post, new { style = "margin-left: 85px;margin-top: -38px" }))
+                                            using (Html.BeginForm("Lock", "Account", FormMethod.Post, new { style = "" }))
                                             {
                                                 <input type="hidden" class="form-control" id="id" name="idUser" value="@user.UserId">
                                                 <button type="submit" style="width: 80px" class="btn btn-danger" disabled>
@@ -332,7 +332,7 @@
                                         }
                                         else
                                         {
-                                            using (Html.BeginForm("UnLock", "Account", FormMethod.Post, new { style = "margin-left: 85px;margin-top: -38px" }))
+                                            using (Html.BeginForm("UnLock", "Account", FormMethod.Post, new { style = "" }))
                                             {
                                                 <input type="hidden" class="form-control" id="id" name="idUser" value="@user.UserId">
                                                 <button type="submit" style="width: 80px" class="btn btn-success" disabled>
@@ -348,13 +348,13 @@
                                             data-bs-target="#exampleModal@(user.UserId)">
                                         Sửa
                                     </button>
-                                    <button type="button" style="width: 80px" class="btn btn-danger mt-1" data-bs-toggle="modal"
+                                    <button type="button" style="width: 80px" class="btn btn-danger" data-bs-toggle="modal"
                                             data-bs-target="#idModelDel@(user.UserId)">
                                         Xóa
                                     </button>
                                     if (user.Active)
                                     {
-                                        using (Html.BeginForm("Lock", "Account", FormMethod.Post, new { style = "margin-left: 85px;margin-top: -38px" }))
+                                        using (Html.BeginForm("Lock", "Account", FormMethod.Post, new { style = "" }))
                                         {
                                             <input type="hidden" class="form-control" id="id" name="idUser" value="@user.UserId">
                                             <button type="submit" style="width: 80px" class="btn btn-danger">
@@ -364,7 +364,7 @@
                                     }
                                     else
                                     {
-                                        using (Html.BeginForm("UnLock", "Account", FormMethod.Post, new { style = "margin-left: 85px;margin-top: -38px" }))
+                                        using (Html.BeginForm("UnLock", "Account", FormMethod.Post, new { style = "" }))
                                         {
                                             <input type="hidden" class="form-control" id="id" name="idUser" value="@user.UserId">
                                             <button type="submit" style="width: 80px" class="btn btn-success">

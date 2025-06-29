@@ -11,7 +11,7 @@ namespace Donation.Models
     [Table("Donations")]
     public class Donation
     {
-        public string Id { get; set; } = new Guid().ToString();
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Code { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public string Description { get; set; }

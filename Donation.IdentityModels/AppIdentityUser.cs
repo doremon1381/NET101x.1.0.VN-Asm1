@@ -24,5 +24,9 @@ namespace Donation.IdentityModels
         [Required]
         public bool Active { get; set; }
         public DateTime CreateAt { get; set; } = DateTime.Now;
+        ///// <summary>
+        ///// for soft delete, default is false
+        ///// </summary>
+        //public bool IsDeleted { get; set; } = false;
     }
 }

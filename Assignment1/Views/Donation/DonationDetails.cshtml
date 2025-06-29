@@ -93,7 +93,7 @@
             <div class="d-flex justify-content-between">
                 <div class="card-header d-flex flex-row gap-2">
                     <label for="ct_id" class="col-form-label">entries per page</label>
-                    <select class="form-control col-2" name="pageCount" id="pageCountSelection" style="width:50px">
+                    <select class="form-control col-2" name="pageCount" id="pageCountSelection" style="width:200px !important">
                         @foreach (var item in (SelectList)ViewBag.PageNumberSelections)
                         {
                             <option value="@item.Value" @(item.Value == ((int)ViewBag.PageCount).ToString() ? "selected" : "")>@(item.Text)</option>
@@ -115,7 +115,12 @@
                 {
                     @*@Html.Label("Search", new { @class = "mr-1" })*@
                     @*@Html.TextBox("searching", ViewBag.Search as string, new { id = "searching", name = "searching", @class = "form-control", placeholder = "search" })*@
-                    <input type="text" name="searching" class="form-control" id="searching" placeholder="any columns" value="@(ViewBag.Search as string)" />
+                    <input type="text" name="searching" class="form-control" id="searching" placeholder="name, status or note" value="@(ViewBag.Search as string)" />
+                    <input type="hidden" name="id" class="form-control" id="id" value="@(Model.Id)"/>
+                    <input type="hidden" name="sortColumn" class="form-control" id="sortColumn" value="@(ViewBag.SortColumn)"/>
+                    <input type="hidden" name="iconClass" class="form-control" id="iconClass" value="@(ViewBag.IconClass)"/>
+                    <input type="hidden" name="pageCount" class="form-control" id="pageCount" value="@(ViewBag.PageCount)"/>
+                    <input type="hidden" name="pageNumber" class="form-control" id="pageNumber" value="@(ViewBag.PageNumber)"/>
                     <button type="submit" class="btn btn-success">Search</button>
                 }
             </div>
@@ -268,6 +273,18 @@
                             }
                         </tr>
                     }
+                    <tr>
+                        <td colspan="9">
+                            <ul class="pagination justify-content-center">
+                                @for (int i = 0; i < ViewBag.TotalPages; i++)
+                                {
+                                    <li class="page-item @(ViewBag.PageNumber == i+1 ? "active" : "")">
+                                        <a class="page-link" href="/donation/donationDetails?id=@Model.Id&sortColumn=@ViewBag.SortColumn&pageCount=@ViewBag.PageCount&searching=@ViewBag.Search&iconClass=@ViewBag.IconClass&pageNumber=@(i+1)">@(i+1)</a>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

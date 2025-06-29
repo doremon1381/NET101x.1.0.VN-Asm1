@@ -24,6 +24,11 @@ namespace Donation.Models
         [Required]
         public string DonationId { get; set; }
 
+        [ForeignKey("UserId")]
+        public UserProfile UserProfile { get; set; }
+        [ForeignKey("DonationId")]
+        public Donation Donation { get; set; }
+
         public bool IsDeleted { get; set; } = false; // Default value is false
     }
 

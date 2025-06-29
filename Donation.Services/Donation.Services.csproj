@@ -93,6 +93,10 @@
     <Compile Include="Migrations\202506282246475_addIsDeletedProperty.Designer.cs">
       <DependentUpon>202506282246475_addIsDeletedProperty.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202506290948246_addUpdateDatabaseForSoftDelete.cs" />
+    <Compile Include="Migrations\202506290948246_addUpdateDatabaseForSoftDelete.Designer.cs">
+      <DependentUpon>202506290948246_addUpdateDatabaseForSoftDelete.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -136,6 +140,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202506282246475_addIsDeletedProperty.resx">
       <DependentUpon>202506282246475_addIsDeletedProperty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506290948246_addUpdateDatabaseForSoftDelete.resx">
+      <DependentUpon>202506290948246_addUpdateDatabaseForSoftDelete.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

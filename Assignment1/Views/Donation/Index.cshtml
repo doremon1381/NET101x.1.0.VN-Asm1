@@ -18,6 +18,10 @@
                     @*@Html.Label("Search", new { @class = "mr-1" })*@
                     @*@Html.TextBox("searching", ViewBag.Search as string, new { id = "searching", name = "searching", @class = "form-control", placeholder = "search" })*@
                     <input type="text" name="searching" class="form-control" id="searching" placeholder="search" value="@(ViewBag.Search as string)"/>
+                    <input type="hidden" name="sortColumn" class="form-control" id="sortColumn" value="@(ViewBag.SortColumn)"/>
+                    <input type="hidden" name="iconClass" class="form-control" id="iconClass" value="@(ViewBag.IconClass)"/>
+                    <input type="hidden" name="pageCount" class="form-control" id="pageCount" value="@(ViewBag.PageCount)"/>
+                    <input type="hidden" name="pageNumber" class="form-control" id="pageNumber" value="@(ViewBag.PageNumber)"/>
                     <button type="submit" class="btn btn-success">Search</button>
                 }
             </div>

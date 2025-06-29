@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Donation.Models;
 using System.Data.Entity;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Donation.Services
 {
@@ -199,6 +201,9 @@ namespace Donation.Services
             if (userDonation == null)
                 return false; // User donation not found
 
+            var donation = _dbContext.Donations.Where(d => !d.IsDeleted).First(d => d.Id == userDonation.DonationId);
+            if (donation.Status == DonationStatus.Closed)
+                throw new Exception("This event is closed and can not be modified!");
             if (Enum.TryParse(status, out UserDonationStatus userStatus))
             {
                 userDonation.Status = userStatus;
@@ -233,6 +238,55 @@ namespace Donation.Services
                 }
             }
         }
+
+        public UserProfile CreateUserProfile(UserProfile userProfile)
+        {
+            if (userProfile == null)
+                throw new ArgumentNullException(nameof(userProfile), "User profile cannot be null");
+            if (string.IsNullOrWhiteSpace(userProfile.Email))
+                throw new ArgumentException("Email cannot be empty", nameof(userProfile.Email));
+            //if (string.IsNullOrWhiteSpace(userProfile.FullName))
+            //    throw new ArgumentException("Full name cannot be empty", nameof(userProfile.FullName));
+            _dbContext.UserProfiles.AddOrUpdate(userProfile);
+            _dbContext.SaveChanges();
+            return userProfile; // Returns the created user profile
+        }
+
+        public bool UpdateUserProfile(UserProfile userProfile)
+        {
+            var existingProfile = _dbContext.UserProfiles.First(u => u.UserId == userProfile.UserId && u.IsDeleted == false) ?? 
+                throw new Exception("User not found!");
+
+            existingProfile.FullName = userProfile.FullName;
+            existingProfile.Email = userProfile.Email;
+            existingProfile.PhoneNumber = userProfile.PhoneNumber;
+            existingProfile.Address = userProfile.Address;
+
+            _dbContext.UserProfiles.AddOrUpdate(existingProfile);
+            return _dbContext.SaveChanges() > 0; // Returns true if the update was successful
+        }
+
+        public bool SoftDeleteUserProfile(string idUser)
+        {
+            var userProfile = _dbContext.UserProfiles.First(u => u.UserId == idUser && u.IsDeleted == false);
+            if (userProfile == null)
+                throw new Exception("User profile not found at this step!"); // User profile not found
+            userProfile.IsDeleted = true; // Mark as deleted
+            _dbContext.UserProfiles.AddOrUpdate(userProfile);
+            return _dbContext.SaveChanges() > 0; // Returns true if the deletion was successful
+        }
+
+        public IEnumerable<UserDonation> GetUserDonations()
+        {
+            return _dbContext.UserDonations.Where(u => !u.IsDeleted).AsEnumerable();
+        }
+
+        public IEnumerable<UserDonation> FindUserDonationByDonationId(string donationId)
+        {
+            return _dbContext.UserDonations
+                .Where(ud => !ud.IsDeleted && ud.DonationId == donationId)
+                .AsEnumerable();
+        }
     }
 
     public interface IDonationServices
@@ -241,12 +295,17 @@ namespace Donation.Services
         void CreateSampleDonation();
         void CreateSampleUserDonations(string donationId);
         void CreateSampleUserProfiles(List<UserProfile> userProfiles);
+        UserProfile CreateUserProfile(UserProfile userProfile);
         Donation.Models.Donation FindById(string donationId, bool userDonationsRequired = false);
+        IEnumerable<UserDonation> FindUserDonationByDonationId(string donationId);
         UserDonation FindUserDonationById(string id, bool includeRelatedTable = false);
         IEnumerable<Donation.Models.Donation> GetDonationPlans();
+        IEnumerable<UserDonation> GetUserDonations();
         bool SoftDelete(string donationId);
+        bool SoftDeleteUserProfile(string idUser);
         bool UpdateDonation(Models.Donation donation);
         bool UpdateDonationStatus(string donationId, string donationStatus);
         bool UpdateUserDonation(string id, string status);
+        bool UpdateUserProfile(UserProfile userProfile);
     }
 }

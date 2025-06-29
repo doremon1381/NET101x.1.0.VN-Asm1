@@ -39,18 +39,18 @@ namespace Donation.IdentityService
             // create user role
             //if (_roleManager.IsValueCreated)
             //{
-                var role = _roleManager.Value.FindByName(Roles.USER);
-                if (role == null)
+            var role = _roleManager.Value.FindByName(Roles.USER);
+            if (role == null)
+            {
+                var userRole = new IdentityRole()
                 {
-                    var userRole = new IdentityRole()
-                    {
-                        Name = Roles.USER
-                    };
-                    _roleManager.Value.Create(userRole);
-                }                    
+                    Name = Roles.USER
+                };
+                _roleManager.Value.Create(userRole);
+            }
             //}
 
-            for (int i = 0; i < 10; i++) 
+            for (int i = 0; i < 10; i++)
             {
                 var newUser = new AppIdentityUser()
                 {
@@ -102,7 +102,13 @@ namespace Donation.IdentityService
 
         public AppIdentityUser Find(string username, string password)
         {
-            return _userManager.Find(username, password);
+            var user = _userManager.Find(username, password);
+            //var user = _identityDbContext.Users.Where(u => u.UserName == username && u.PasswordHash == passwordHash && !u.IsDeleted)
+            //    .FirstOrDefault();
+            if (user == null)
+                //|| user.IsDeleted)
+                return null;
+            return user;
         }
 
         public IdentityRole FindRole(string id)
@@ -112,12 +118,14 @@ namespace Donation.IdentityService
 
         public AppIdentityUser FindUserById(string userId)
         {
-            return _identityDbContext.Users.Find(userId);
+            //return _identityDbContext.Users.Where(u => !u.IsDeleted).First(u => u.Id == userId);
+            return _userManager.FindById(userId);
         }
 
         public List<AppIdentityUser> GetAllUsers()
         {
-            return _identityDbContext.Users.ToList();
+            //return _identityDbContext.Users.Where(u => !u.IsDeleted).ToList();
+            return _userManager.Users.ToList();
         }
 
         public List<IdentityRole> GetRoles()
@@ -130,8 +138,9 @@ namespace Donation.IdentityService
             var user = _identityDbContext.Users.Find(userId);
 
             if (user == null)
+                //|| user.IsDeleted)
                 // TODO
-                throw new Exception();
+                throw new Exception("User not found!");
 
             var userRole = _roleManager.Value.FindById(user.Roles.First().RoleId);
 
@@ -144,7 +153,14 @@ namespace Donation.IdentityService
 
         public bool IsEmailExist(string email)
         {
+            //return _identityDbContext.Users.Where(u => !u.IsDeleted).Any(u => u.Email == email);
             return _identityDbContext.Users.Any(u => u.Email == email);
+        }
+
+        public bool IsUserNameExist(string userName)
+        {
+            //return _identityDbContext.Users.Where(u => !u.IsDeleted).Any(u => u.UserName == userName);
+            return _userManager.Users.Any(u => u.UserName == userName);
         }
 
         public List<AppIdentityUser> SearchForUsers(string phoneNumberOrEmail)
@@ -184,7 +200,8 @@ namespace Donation.IdentityService
             {
                 var user = _identityDbContext.Users.Find(appIdentityUser.Id);
 
-                if (user == null)
+                if (user == null )
+                    //|| user.IsDeleted)
                     return false;
                 user.FirstName = appIdentityUser.FirstName;
                 user.LastName = appIdentityUser.LastName;
@@ -198,9 +215,9 @@ namespace Donation.IdentityService
                 {
                     // remove old role
                     var oldRoles = _userManager.GetRoles(user.Id);
-                    foreach(var oldRole in oldRoles)
+                    foreach (var oldRole in oldRoles)
                         if (oldRole != null)
-                        { 
+                        {
                             var result = _userManager.RemoveFromRole(user.Id, oldRole);
                             if (!result.Succeeded)
                                 throw new Exception();
@@ -238,5 +255,6 @@ namespace Donation.IdentityService
         IdentityRole GetUserRole(string userId);
         bool DeleteUser(string id);
         List<AppIdentityUser> GetAllUsers();
+        bool IsUserNameExist(string userName);
     }
 }
