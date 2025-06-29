@@ -42,7 +42,7 @@
                                         <div class="comment-body">
                                             <h3>@userDonation.UserFullName</h3>
                                             <div class="meta" style="color: #373b3e !important;">@userDonation.CreatedAt.ToString("yyyy-MM-dd")</div>
-                                            <p>@userDonation.Money</p>
+                                            <p>@userDonation.Money.ToString("C2", System.Globalization.CultureInfo.GetCultureInfo("vn-vn"))</p>
                                         </div>
                                     </li>
                                 }

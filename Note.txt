@@ -1,11 +1,12 @@
-1. for how to use Mailkit, see https://mailtrap.io/blog/asp-net-core-send-email/
-2. for how to google password for mailkit: https://support.google.com/accounts/answer/185833?hl=en
+1. Because I use mailkit for sending email, then
+- for how to use Mailkit, see https://mailtrap.io/blog/asp-net-core-send-email/
+- for how to google password for mailkit: https://support.google.com/accounts/answer/185833?hl=en
 
-3. Migrate Donation.IdentityService first, because I create admin account inside seed function
- when update-database at first time.
-4. I separate identity and userprofile, use identity for permission and userprofile for bussiness logic.
+3. Migrate Donation.IdentityService first, because I create an admin account inside the seed function
+ when updating the database using migration for the first time.
+4. I separate identity and userprofile, using identity for permission and userprofile for business logic.
 And because I don't know how to apply soft delete to Asp.Net identity, then I just delete the identity 
-when the delete function is called, but for the userprofile, only it's IsDeleted propery will be updated.
+when the delete function is called, but for the userprofile, only its IsDeleted property will be updated.
 
 5. default admin account is:
 username: admin
