@@ -20,9 +20,9 @@ namespace Assignment1
         /// for how to get it: https://support.google.com/accounts/answer/185833?hl=en
         /// </summary>
         // TODO: you need to add your own password here
-        // public const string PASSWORD = "your_password_here"; // replace with your actual password
+        public const string PASSWORD= "YourPasswordHere"; // replace with your actual password
         // and do the same with the EMAILID below
-        // public const string EMAILID = "your_email_here";
+        public const string EMAILID = "your_email_here";
 
     }
 }

@@ -6,3 +6,7 @@
 4. I separate identity and userprofile, use identity for permission and userprofile for bussiness logic.
 And because I don't know how to apply soft delete to Asp.Net identity, then I just delete the identity 
 when the delete function is called, but for the userprofile, only it's IsDeleted propery will be updated.
+
+5. default admin account is:
+username: admin
+password: admin123
